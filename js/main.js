@@ -77,4 +77,68 @@
     window.location.href = `mailto:hello@faifostudio.com?subject=${subject}&body=${body}`;
     status.textContent = 'Opening your mail app, addressed to hello@faifostudio.com.';
   });
+
+  // Hero mouse trail — real Auko frames pop up near the cursor and fade out,
+  // leaving a trail. Fine-pointer + motion-OK only; touch/reduced-motion get
+  // the plain ink ground with nothing extra.
+  const hero = document.getElementById('top');
+  const trail = hero?.querySelector('.hero__trail');
+  const canTrail = hero && trail
+    && window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canTrail) {
+    const images = [
+      'overview-01-aerial-day.jpg', 'overview-02-dusk.jpg', 'land-01.jpg', 'land-02.jpg',
+      'lodge-ground-01.jpg', 'lodge-canopy-01.jpg', 'lodge-earth-01.jpg', 'lodge-river-01.jpg',
+      'welcome-01.jpg', 'wellness-01.jpg', 'lifestyle-01.jpg', 'lifestyle-03.jpg',
+    ].map(f => `assets/photo/auko/${f}`);
+
+    const MIN_DIST = 110;
+    const MAX_LIVE = 5;
+    const HOLD_MS = 550;
+    const live = [];
+    let lastX = null, lastY = null, lastSrc = null;
+
+    function spawn(x, y) {
+      let src = images[Math.floor(Math.random() * images.length)];
+      if (src === lastSrc) src = images[(images.indexOf(src) + 1) % images.length];
+      lastSrc = src;
+
+      const img = document.createElement('img');
+      img.className = 'hero__trail-img';
+      img.src = src;
+      img.alt = '';
+      img.style.left = x + 'px';
+      img.style.top = y + 'px';
+      trail.appendChild(img);
+      live.push(img);
+      requestAnimationFrame(() => img.classList.add('is-in'));
+
+      if (live.length > MAX_LIVE) retire(live[0]);
+      setTimeout(() => retire(img), HOLD_MS);
+    }
+
+    function retire(img) {
+      if (!img.isConnected || img.classList.contains('is-out')) return;
+      const i = live.indexOf(img);
+      if (i !== -1) live.splice(i, 1);
+      img.classList.remove('is-in');
+      img.classList.add('is-out');
+      img.addEventListener('transitionend', () => img.remove(), { once: true });
+      setTimeout(() => img.remove(), 700); // fallback if transitionend never fires
+    }
+
+    hero.addEventListener('pointermove', (e) => {
+      if (e.pointerType !== 'mouse') return;
+      const rect = hero.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      if (lastX !== null && Math.hypot(x - lastX, y - lastY) < MIN_DIST) return;
+      lastX = x; lastY = y;
+      spawn(x, y);
+    });
+
+    hero.addEventListener('pointerleave', () => { lastX = lastY = null; });
+  }
 })();

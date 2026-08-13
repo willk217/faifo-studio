@@ -220,34 +220,24 @@
   justify-content: space-between;
   padding: var(--sp-7) var(--page-margin) var(--sp-8);
   color: var(--bone-50);
+  background: var(--ink-900);
   overflow: hidden;
 }
 
-.hero__bg {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  background-size: cover;
-  background-position: center 62%;
-}
+.hero__trail { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
 
-.hero__bg-video {
+.hero__trail-img {
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center 55%;
-  background: var(--ink-900);
+  top: 0; left: 0;
+  width: 200px;
+  height: auto;
+  transform: translate(-50%, -50%) scale(.92);
+  opacity: 0;
+  transition: opacity 260ms var(--ease-standard), transform 260ms var(--ease-standard);
+  will-change: opacity, transform;
 }
-
-.hero__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: linear-gradient(to top, rgba(14,14,12,.92) 0%, rgba(14,14,12,.5) 38%, rgba(14,14,12,.12) 62%, rgba(14,14,12,.35) 100%);
-}
+.hero__trail-img.is-in { opacity: .92; transform: translate(-50%, -50%) scale(1); }
+.hero__trail-img.is-out { opacity: 0; transform: translate(-50%, -50%) scale(.96); transition-duration: 480ms; }
 
 .hero__content { position: relative; z-index: 2; max-width: var(--grid-max); margin-inline: auto; width: 100%; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 
