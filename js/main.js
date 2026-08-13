@@ -56,9 +56,6 @@
     const data = new FormData(form);
     const name = (data.get('name') || '').toString().trim();
     const email = (data.get('email') || '').toString().trim();
-    const company = (data.get('company') || '').toString().trim();
-    const projectType = (data.get('projectType') || '').toString().trim();
-    const budget = (data.get('budget') || '').toString().trim();
     const message = (data.get('message') || '').toString().trim();
 
     if (!name || !email || !message) {
@@ -67,13 +64,10 @@
       return;
     }
 
-    const subject = encodeURIComponent(`Enquiry — ${company || projectType || 'new project'}`);
+    const subject = encodeURIComponent('Enquiry — new project');
     const lines = [
       `Name: ${name}`,
       `Email: ${email}`,
-      `Company / property: ${company || '—'}`,
-      `Project type: ${projectType || '—'}`,
-      `Budget range: ${budget || '—'}`,
       '',
       message,
     ];
