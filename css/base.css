@@ -1,0 +1,64 @@
+/* Reset + browser surfaces, themed from the palette rather than left to defaults */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+body {
+  font-family: var(--font-grotesk);
+  background: var(--bone-100);
+  color: var(--ink-900);
+  font-variation-settings: 'wdth' 100;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+
+/* Selection */
+::selection { background: var(--ink-900); color: var(--bone-50); }
+.on-ink ::selection { background: var(--bone-50); color: var(--ink-900); }
+
+/* Caret */
+input, textarea { caret-color: var(--clay-500); }
+
+/* Focus ring — 2px solid, offset, themed */
+:focus-visible {
+  outline: 2px solid var(--ink-900);
+  outline-offset: 2px;
+}
+.on-ink :focus-visible { outline-color: var(--bone-50); }
+
+/* Scrollbar */
+html { scrollbar-width: thin; scrollbar-color: var(--sand-300) var(--bone-100); }
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: var(--bone-100); }
+::-webkit-scrollbar-thumb { background: var(--sand-300); border: 2px solid var(--bone-100); }
+::-webkit-scrollbar-thumb:hover { background: var(--clay-500); }
+
+/* Tabular numerals for meta/data */
+.mono, [data-num] { font-variant-numeric: tabular-nums; }
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  left: 12px;
+  top: -60px;
+  background: var(--bone-50);
+  color: var(--ink-900);
+  padding: 10px 16px;
+  font-family: var(--font-mono);
+  font-size: .75rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  z-index: 100;
+  transition: top 150ms ease;
+}
+.skip-link:focus { top: 12px; }

@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<!--
+THESIS: A multidisciplinary creative studio's site should read like a working notebook, not a template: every panel carries a section number and plain, direct copy, and the one real case study gets real room to breathe.
+OWN-WORLD: Ink #0E0E0C and bone #F2EEE6 grounds, Archivo display (wdth 112, -4.5% tracking, uppercase) over IBM Plex Mono meta, a two-corner crop-mark logo, radius 0, one 4px offset shadow on the whole site.
+STORY: A hospitality brand or property developer sees what the studio actually does (photo, film, drone, brand), sees Auko as proof, sees how a project runs, then starts one.
+FIRST VIEWPORT: Full-bleed Auko photograph, dark scrim rising from the base, meta bar top, headline "Creative media for brands and spaces" bottom-left, subhead + two CTAs bottom-right.
+FORM: Restructured from a handoff doc (services, featured project, process, clients, testimonials, about, contact) laid over the existing brief-pinned Faifo Studio brand system — visual language unchanged, information architecture rebuilt.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md.
+-->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Faifo Studio — Creative media for brands and spaces</title>
+<meta name="description" content="Faifo Studio is a Hoi An based creative studio: real estate photography, videography, drone and brand design. Featured project: Auko, an eco-wellness lodge in Phong Nha.">
+<link rel="icon" href="assets/logo/mark-ink.png">
+<link rel="stylesheet" href="css/tokens.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="nav on-ink">
+  <div class="nav__row">
+    <a class="nav__brand" href="#top" aria-label="Faifo Studio, home">
+      <img src="assets/logo/mark-nav.png" alt="">
+      <span>Faifo Studio</span>
+    </a>
+    <nav class="nav__links" aria-label="Primary">
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a class="is-cta" href="#contact">Start a project →</a>
+    </nav>
+    <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4h14M1 8h14M1 12h14" stroke="currentColor" stroke-width="1.3"/></svg>
+    </button>
+  </div>
+</header>
+
+<div class="nav-panel" id="navPanel">
+  <div class="nav__row" style="padding:0;">
+    <span class="nav__brand"><img src="assets/logo/mark-nav.png" alt=""><span>Faifo Studio</span></span>
+    <button class="nav-panel__close" id="navClose" aria-label="Close menu">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.3"/></svg>
+    </button>
+  </div>
+  <nav class="nav-panel__links" aria-label="Mobile">
+    <a href="#work">Work</a>
+    <a href="#services">Services</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <span class="meta-sm" style="color:var(--ink-meta-on-ink)">Hoi An, Vietnam · studio@faifo.studio</span>
+</div>
+
+<main id="main">
+
+  <!-- Hero -->
+  <section class="hero on-ink" id="top" aria-label="Introduction">
+    <!-- Hero video background is on hold until auko-storytelling.mp4 has a compressed
+         web proxy (or is hosted externally) — the delivery file is 285MB. See DESIGN.md. -->
+    <div class="hero__bg" style="background-image:url('assets/photo/auko/overview-01-aerial-day.jpg')"></div>
+    <div class="hero__scrim"></div>
+    <div class="hero__content">
+      <div class="hero__top meta">
+        <span>Faifo Studio</span>
+        <span>Hoi An, Vietnam</span>
+      </div>
+      <div class="hero__body">
+        <div>
+          <h1 class="h-display">Creative<br>media for<br>brands.</h1>
+          <div class="hero__ctas">
+            <a class="btn" href="#work">See our work →</a>
+            <a class="btn" href="#contact">Start a project →</a>
+          </div>
+        </div>
+        <p class="lead hero__lead">We shoot, film, and design the way people see your property, your brand, and your business. Real estate photography, video, drone and brand work, made by a studio based in Hoi An.</p>
+      </div>
+    </div>
+    <div class="hero__scroll meta-sm">
+      <span>Photography · Video · Drone · Brand</span>
+      <span class="scroll-mark" aria-hidden="true"></span>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- 01 — Services -->
+  <section class="section on-bone" id="services" aria-label="Services">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>01 — Services</span>
+        <span>Photography · Video · Drone · Brand</span>
+      </div>
+      <div class="section-head reveal">
+        <h2 class="h-section">What we do</h2>
+        <p class="body-text" style="color:var(--ink-meta-on-bone)">Five things, done properly. Not a menu of everything, just the work we're actually good at.</p>
+      </div>
+
+      <div class="numbered-list reveal">
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">01</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">Real estate photography</span>
+            <span class="numbered-list__desc">The kind of images that make a space feel like somewhere you'd want to be, not just document it exists.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">02</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">Videography</span>
+            <span class="numbered-list__desc">Property films, hotel and resort walkthroughs, brand films. Shot to be watched, not skipped.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">03</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">Drone</span>
+            <span class="numbered-list__desc">Aerial coverage for properties, resorts, and land that photos on the ground can't show.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">04</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">Brand design</span>
+            <span class="numbered-list__desc">Logos, visual identity, brand guidelines. The system that holds everything else together.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">05</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">Brand media</span>
+            <span class="numbered-list__desc">Ongoing content, social assets, campaign shoots. For brands that need more than a one-off.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — Featured project: Auko -->
+  <section class="section on-bone" id="work" aria-label="Featured project: Auko">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>02 — Featured project</span>
+        <span>Case study · Auko, Phong Nha</span>
+      </div>
+
+      <div class="case-intro reveal">
+        <div class="case-intro__col">
+          <h2 class="h-section">Auko</h2>
+          <p class="meta" style="color:var(--clay-500); margin-top:var(--sp-3)">Eco-wellness lodge · Phong Nha</p>
+        </div>
+        <div class="case-intro__col">
+          <p class="lead" style="max-width:56ch">Auko is a new eco-wellness lodge opening in Phong Nha, built around hydrotherapy, forest immersion and slow living. We were brought in to shoot the property from the ground and the air, and produce the films that show what the place actually feels like to be in.</p>
+          <ul class="dash-list">
+            <li>Multi-day photo and video shoot across the property</li>
+            <li>Hero film and a set of shorter "way" films for different parts of the guest experience</li>
+            <li>Hundreds of photos covering rooms, treatments, food and grounds</li>
+            <li>Social-ready edits pulled straight from the shoot</li>
+            <li>Ongoing content aligned to their brand system and wellness calendar</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="case-facts reveal">
+        <div class="fact"><span class="meta">Room types</span><strong>4 — Ground, Canopy, Earth, River</strong></div>
+        <div class="fact"><span class="meta">Setting</span><strong>Karst valley · Phong Nha</strong></div>
+        <div class="fact"><span class="meta">Focus</span><strong>Hydrotherapy, forest immersion</strong></div>
+        <div class="fact"><span class="meta">Deliverables</span><strong>Stills, film, drone</strong></div>
+      </div>
+
+      <div class="case-group reveal">
+        <div class="mosaic">
+          <figure><img src="assets/photo/auko/overview-01-aerial-day.jpg" alt="Aerial view of the resort's tented lodges ringing a clearing between karst cliffs" loading="lazy"><figcaption class="meta-sm">Site, aerial</figcaption></figure>
+          <figure><img src="assets/photo/auko/overview-02-dusk.jpg" alt="The lodges lit warm at dusk against the dark cliff face" loading="lazy"><figcaption class="meta-sm">Site, dusk</figcaption></figure>
+          <figure><img src="assets/photo/auko/land-01.jpg" alt="The valley approach, karst peaks rising behind the tree line" loading="lazy"><figcaption class="meta-sm">Approach</figcaption></figure>
+          <figure><img src="assets/photo/auko/land-02.jpg" alt="Bamboo walkway curving through the grounds" loading="lazy"><figcaption class="meta-sm">Walkway</figcaption></figure>
+          <figure><img src="assets/photo/auko/lodge-ground-01.jpg" alt="Ground lodge exterior on its raised timber platform" loading="lazy"><figcaption class="meta-sm">Ground lodge</figcaption></figure>
+          <figure><img src="assets/photo/auko/lodge-canopy-01.jpg" alt="Canopy lodge interior, timber-panelled bed with warm lamplight" loading="lazy"><figcaption class="meta-sm">Canopy lodge</figcaption></figure>
+          <figure><img src="assets/photo/auko/lodge-earth-01.jpg" alt="Earth lodge exterior among the trees" loading="lazy"><figcaption class="meta-sm">Earth lodge</figcaption></figure>
+          <figure><img src="assets/photo/auko/lodge-river-01.jpg" alt="River lodge along the walkway at the water's edge" loading="lazy"><figcaption class="meta-sm">River lodge</figcaption></figure>
+          <figure><img src="assets/photo/auko/welcome-01.jpg" alt="The welcome pavilion, bamboo structure with mountain views" loading="lazy"><figcaption class="meta-sm">Welcome pavilion</figcaption></figure>
+          <figure><img src="assets/photo/auko/wellness-01.jpg" alt="Hydrotherapy and wellness deck overlooking the valley" loading="lazy"><figcaption class="meta-sm">Hydrotherapy</figcaption></figure>
+          <figure><img src="assets/photo/auko/restaurant-01.jpg" alt="Origin restaurant dining area" loading="lazy"><figcaption class="meta-sm">Origin restaurant</figcaption></figure>
+          <figure><img src="assets/photo/auko/lifestyle-01.jpg" alt="A guest resting inside a lodge, warm lamplight" loading="lazy"><figcaption class="meta-sm">Lodge, evening</figcaption></figure>
+          <figure><img src="assets/photo/auko/lifestyle-02.jpg" alt="Morning ritual inside a lodge" loading="lazy"><figcaption class="meta-sm">Morning ritual</figcaption></figure>
+          <figure><img src="assets/photo/auko/lifestyle-03.jpg" alt="A wellness moment on the treatment deck" loading="lazy"><figcaption class="meta-sm">Treatment deck</figcaption></figure>
+          <figure><img src="assets/photo/auko/lifestyle-04.jpg" alt="Life on the resort grounds" loading="lazy"><figcaption class="meta-sm">On the grounds</figcaption></figure>
+          <figure><img src="assets/photo/auko/lifestyle-05.jpg" alt="A quiet moment at Auko" loading="lazy"><figcaption class="meta-sm">Quiet moment</figcaption></figure>
+          <figure><img src="assets/photo/auko/texture-01.jpg" alt="Natural material texture from the build" loading="lazy"><figcaption class="meta-sm">Texture</figcaption></figure>
+        </div>
+      </div>
+
+      <blockquote class="pull-quote is-placeholder reveal">
+        <p>Client quote pending — reserved for Auko team feedback on the shoot and the films.</p>
+      </blockquote>
+    </div>
+  </section>
+
+  <!-- 03 — How we work -->
+  <section class="section on-ink hairline-top" id="process" aria-label="How we work">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>03 — How we work</span>
+        <span>Talk · Shoot · Edit · Stay</span>
+      </div>
+      <div class="section-head reveal">
+        <h2 class="h-section">How it works</h2>
+      </div>
+
+      <div class="numbered-list reveal">
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">01</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">We talk it through</span>
+            <span class="numbered-list__desc">What the space or brand needs, what it's for, who's seeing it.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">02</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">We shoot</span>
+            <span class="numbered-list__desc">On location, with the gear and crew the project actually needs — photo, video, drone.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">03</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">We edit and deliver</span>
+            <span class="numbered-list__desc">Final images and films, formatted for however you're using them — web, social, print, ads.</span>
+          </div>
+        </div>
+        <div class="numbered-list__item">
+          <span class="numbered-list__num">04</span>
+          <div class="numbered-list__body">
+            <span class="numbered-list__title">We stick around</span>
+            <span class="numbered-list__desc">Some clients need one shoot. Others need a studio on retainer for ongoing content. We do both.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — Clients -->
+  <section class="section on-bone" id="clients" aria-label="Clients">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>04 — Clients</span>
+        <span>A running list</span>
+      </div>
+      <div class="section-head reveal">
+        <h2 class="h-section">Who we've worked with</h2>
+        <p class="body-text" style="color:var(--ink-meta-on-bone)">A running list, not a highlight reel.</p>
+      </div>
+      <div class="clients__list reveal">
+        <span class="clients__name">Auko</span>
+        <span class="clients__name">OTA Playhouse</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — Testimonials -->
+  <section class="section on-ink hairline-top" id="testimonials" aria-label="Testimonials">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>05 — Testimonials</span>
+        <span>What people say</span>
+      </div>
+      <div class="section-head reveal">
+        <h2 class="h-section">What people say</h2>
+      </div>
+      <div class="testimonial-empty reveal">
+        <span class="meta" style="color:var(--clay-500)">Coming soon</span>
+        <p class="body-text">Client testimonials go here once the first few projects wrap. We'd rather leave this quiet than fill it with anything that isn't real.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — About -->
+  <section class="section on-bone" id="about" aria-label="About the studio">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>06 — About</span>
+        <span>16°03′N 108°20′E</span>
+      </div>
+      <div class="studio__row reveal">
+        <div class="studio__col">
+          <h2 class="h-section">The studio</h2>
+        </div>
+        <div class="studio__col">
+          <p class="body-text" style="color:var(--ink-meta-on-bone)">Faifo Studio is based in Hoi An. We work with hospitality brands, property developers, and businesses who need their space or brand to actually look like what it is. Photography, video, drone, and brand design, under one roof, so the work stays consistent from the first shoot to the last post.</p>
+          <p class="body-text" style="color:var(--ink-meta-on-bone); margin-top:var(--sp-5)">We're a small studio. That means the person who shoots your project is the same person who edits it, and the same person you talk to about it.</p>
+        </div>
+      </div>
+      <div class="doctrine reveal">
+        <div class="doctrine__item">
+          <span class="meta">Grade</span>
+          <span>One per project</span>
+        </div>
+        <div class="doctrine__item">
+          <span class="meta">Flash</span>
+          <span>None</span>
+        </div>
+        <div class="doctrine__item">
+          <span class="meta">Delivery</span>
+          <span>Private gallery, full-res</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 07 — Contact -->
+  <section class="section on-bone" id="contact" aria-label="Contact">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>07 — Contact</span>
+        <span>studio@faifo.studio</span>
+      </div>
+
+      <div class="enquire__row reveal">
+        <div class="enquire__copy">
+          <h2 class="h-section">Start a project</h2>
+          <p class="body-text" style="color:var(--ink-meta-on-bone)">Tell us what you're working on. Property, brand, campaign, ongoing content, whatever it is.</p>
+
+          <form id="enquireForm" novalidate>
+            <div class="grid-12" style="gap:var(--sp-5); margin-bottom: var(--sp-5);">
+              <div class="field" style="grid-column: span 6;">
+                <label for="f-name">Name</label>
+                <input id="f-name" name="name" type="text" required autocomplete="name" placeholder="Your name">
+              </div>
+              <div class="field" style="grid-column: span 6;">
+                <label for="f-email">Email</label>
+                <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="you@company.com">
+              </div>
+              <div class="field" style="grid-column: span 12;">
+                <label for="f-company">Company / property name</label>
+                <input id="f-company" name="company" type="text" placeholder="Auko, OTA Playhouse, your business">
+              </div>
+              <div class="field" style="grid-column: span 6;">
+                <label for="f-type">Project type</label>
+                <select id="f-type" name="projectType">
+                  <option value="">Select one</option>
+                  <option>Real estate photography</option>
+                  <option>Videography</option>
+                  <option>Drone</option>
+                  <option>Brand design</option>
+                  <option>Brand media</option>
+                  <option>Something else</option>
+                </select>
+              </div>
+              <div class="field" style="grid-column: span 6;">
+                <label for="f-budget">Budget range</label>
+                <select id="f-budget" name="budget">
+                  <option value="">Prefer not to say</option>
+                  <option>Under $500</option>
+                  <option>$500 – 2,000</option>
+                  <option>$2,000 – 5,000</option>
+                  <option>$5,000+</option>
+                </select>
+              </div>
+              <div class="field" style="grid-column: span 12;">
+                <label for="f-message">Message</label>
+                <textarea id="f-message" name="message" required placeholder="Tell us about the space or brand"></textarea>
+              </div>
+            </div>
+            <button class="btn" type="submit">Send it →</button>
+            <p class="form-note" id="formStatus" role="status" aria-live="polite" style="margin-top:var(--sp-4)">Opens in your mail app, addressed to studio@faifo.studio.</p>
+          </form>
+
+          <p class="meta-sm" style="margin-top:var(--sp-7); color:var(--ink-meta-on-bone)">Prefer email? <a href="mailto:studio@faifo.studio" style="text-decoration:underline">studio@faifo.studio</a></p>
+        </div>
+
+        <aside class="availability-card">
+          <span class="meta" style="color:var(--green-600)">Availability</span>
+          <strong class="h-card">Sep — open</strong>
+          <div>
+            <div class="row"><span class="meta-sm">Response</span><span class="meta-sm">Within 1 working day</span></div>
+            <div class="row"><span class="meta-sm">Deliverables</span><span class="meta-sm">Gallery + film, digital</span></div>
+            <div class="row"><span class="meta-sm">Based</span><span class="meta-sm">Hoi An, travel worldwide</span></div>
+          </div>
+          <a class="btn" href="mailto:studio@faifo.studio">Email the studio →</a>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer on-ink hairline-top">
+  <div class="wrap">
+    <div class="footer__mark">
+      <img src="assets/logo/mark-nav.png" alt="Faifo Studio mark">
+      <span class="h-section" style="font-size:clamp(1.8rem,3vw,3.2rem)">Faifo studio</span>
+    </div>
+    <p class="meta-sm" style="color:var(--ink-meta-on-ink); margin-bottom:var(--sp-6)">Creative media for brands and spaces</p>
+    <nav class="footer__nav meta-sm" style="display:flex; gap:var(--sp-6); margin-bottom:var(--sp-6)" aria-label="Footer">
+      <a href="#work">Work</a>
+      <a href="#services">Services</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact</a>
+    </nav>
+    <div class="footer__row meta">
+      <span>Hoi An, Vietnam · 16°03′N 108°20′E</span>
+      <a href="mailto:studio@faifo.studio">studio@faifo.studio</a>
+      <span>©2026 Faifo Studio</span>
+      <a class="back-top" href="#top">Top ↑</a>
+    </div>
+  </div>
+</footer>
+
+<div class="lightbox" id="lightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <div class="lightbox__backdrop"></div>
+  <div class="lightbox__stage">
+    <div class="lightbox__frame">
+      <img class="lightbox__img" alt="" draggable="false">
+    </div>
+    <div class="lightbox__caption meta-sm">
+      <span data-lightbox-index></span>
+      <span data-lightbox-caption></span>
+    </div>
+  </div>
+  <div class="lightbox__top">
+    <span class="meta-sm">Auko</span>
+    <button class="lightbox__close" aria-label="Close">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.3"/></svg>
+    </button>
+  </div>
+  <div class="lightbox__nav is-prev">
+    <button class="lightbox__nav-btn" aria-label="Previous photo">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 2 4 8l6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+  <div class="lightbox__nav is-next">
+    <button class="lightbox__nav-btn" aria-label="Next photo">
+      <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M6 2l6 6-6 6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
+</div>
+
+<script src="js/spring.js"></script>
+<script src="js/lightbox.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

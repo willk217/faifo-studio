@@ -1,0 +1,10 @@
+# Real Auko video exports — 382MB total, GitHub hard-rejects files over 100MB anyway.
+# Not currently referenced by the live page (hero reverted to a static image until
+# there's a compressed proxy). Keep the files locally; don't push them.
+assets/video/
+
+# OS cruft
+.DS_Store
+
+# Editor/tooling scratch
+.impeccable/

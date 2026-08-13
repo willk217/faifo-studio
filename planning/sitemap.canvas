@@ -1,0 +1,49 @@
+{
+  "nodes": [
+    { "id": "b0000000000000a1", "type": "group", "x": -60, "y": -60, "width": 620, "height": 1500, "label": "BEFORE", "color": "1" },
+    { "id": "b0000000000000a2", "type": "group", "x": 700, "y": -60, "width": 620, "height": 1500, "label": "AFTER — per Faifo Studio handoff doc", "color": "4" },
+
+    { "id": "b1nav0000000001", "type": "text", "x": 0, "y": 0, "width": 500, "height": 90, "text": "**Nav**\nWork · Video · Studio · Approach · Enquire\nno CTA button, plain links only" },
+    { "id": "b1hero000000002", "type": "text", "x": 0, "y": 120, "width": 500, "height": 120, "text": "**Hero**\n\"Light, stone, water.\"\nFictional Villa Sông, Hoi An — brand deck's own worked example, doesn't match the real Auko work below it" },
+    { "id": "b1stats000000003", "type": "text", "x": 0, "y": 270, "width": 500, "height": 80, "text": "**Stats strip**\nSelected work / Auko, Vietnam · Film / Sound included · Availability / Sep — open" },
+    { "id": "b1work0000000004", "type": "text", "x": 0, "y": 380, "width": 500, "height": 100, "text": "**Work: Auko**\nGeneric \"glamping resort in a limestone karst valley\" — no real name or location, mosaic gallery + lightbox" },
+    { "id": "b1video000000005", "type": "text", "x": 0, "y": 510, "width": 500, "height": 90, "text": "**Video** (standalone section)\nStorytelling/lifestyle reel + property walkthrough, separate from the Work section" },
+    { "id": "b1studio000000006", "type": "text", "x": 0, "y": 630, "width": 500, "height": 90, "text": "**Studio**\n\"84 stills, 2 films, 10 working days.\" + disciplines/subjects/also row" },
+    { "id": "b1approach00000007", "type": "text", "x": 0, "y": 750, "width": 500, "height": 90, "text": "**Approach**\nShooting doctrine: grade, flash, B&W, delivery — photography-only framing" },
+    { "id": "b1enquire000000008", "type": "text", "x": 0, "y": 870, "width": 500, "height": 90, "text": "**Enquire**\nName, email, property, message — photography-shoot framed form" },
+    { "id": "b1footer000000009", "type": "text", "x": 0, "y": 990, "width": 500, "height": 70, "text": "**Footer**\nHoi An coordinates, studio@faifo.studio, ©2026" },
+
+    { "id": "a1nav0000000001", "type": "text", "x": 760, "y": 0, "width": 500, "height": 90, "text": "**Nav**\nWork · Services · About · Contact + CTA \"Start a project →\"" },
+    { "id": "a1hero000000002", "type": "text", "x": 760, "y": 120, "width": 500, "height": 130, "text": "**Hero**\n\"Creative media for brands and spaces\"\nReal Auko visual, no more Hoi An villa fiction — resolves the old mismatch" },
+    { "id": "a1services00000003", "type": "text", "x": 760, "y": 280, "width": 500, "height": 110, "text": "**Services** — NEW\n\"What we do\": Real estate photography · Videography · Drone · Brand design · Brand media" },
+    { "id": "a1work0000000004", "type": "text", "x": 760, "y": 420, "width": 500, "height": 160, "text": "**Featured project: Auko** — RESTRUCTURED\n\"Auko — Eco-Wellness Lodge, Phong Nha\"\nIntro copy + what-we-did list + mosaic/lightbox + hero film + way film + pull-quote placeholder\n(absorbs the old standalone Video section)" },
+    { "id": "a1how0000000005", "type": "text", "x": 760, "y": 610, "width": 500, "height": 100, "text": "**How we work** — NEW\nWe talk it through → We shoot → We edit and deliver → We stick around" },
+    { "id": "a1clients00000006", "type": "text", "x": 760, "y": 740, "width": 500, "height": 90, "text": "**Who we've worked with** — NEW\nText list: Auko, OTA Playhouse, room to grow" },
+    { "id": "a1testim00000007", "type": "text", "x": 760, "y": 860, "width": 500, "height": 90, "text": "**Testimonials** — NEW\nZero real quotes exist yet — honest minimal placeholder, not padded with fake quotes" },
+    { "id": "a1about0000000008", "type": "text", "x": 760, "y": 980, "width": 500, "height": 110, "text": "**About / The studio** — MERGED (Studio + Approach)\nHoi An, multidisciplinary framing + shooting-doctrine detail folded in" },
+    { "id": "a1contact0000009", "type": "text", "x": 760, "y": 1120, "width": 500, "height": 110, "text": "**Contact** — EXPANDED\n+ project-type dropdown, + budget-range dropdown, alt contact line (email / Instagram)" },
+    { "id": "a1footer0000010", "type": "text", "x": 760, "y": 1260, "width": 500, "height": 70, "text": "**Footer**\nTagline \"Creative media for brands and spaces\", nav repeat, social icons" },
+
+    { "id": "notegaps00000001", "type": "text", "x": 760, "y": 1360, "width": 500, "height": 110, "text": "**Content gaps flagged, not fabricated**\nReal contact email (using studio@faifo.studio placeholder), Instagram handle, testimonial quotes, OTA Playhouse assets — all need the real thing from you before ship." }
+  ],
+  "edges": [
+    { "id": "e1000000000000a1", "fromNode": "b1nav0000000001", "toNode": "a1nav0000000001", "label": "restructure" },
+    { "id": "e1000000000000a2", "fromNode": "b1hero000000002", "toNode": "a1hero000000002", "label": "rewrite" },
+    { "id": "e1000000000000a3", "fromNode": "b1stats000000003", "toNode": "a1services00000003", "label": "removed, replaced by" },
+    { "id": "e1000000000000a4", "fromNode": "b1work0000000004", "toNode": "a1work0000000004", "label": "reframe + expand" },
+    { "id": "e1000000000000a5", "fromNode": "b1video000000005", "toNode": "a1work0000000004", "label": "absorbed into" },
+    { "id": "e1000000000000a6", "fromNode": "b1studio000000006", "toNode": "a1about0000000008", "label": "merge" },
+    { "id": "e1000000000000a7", "fromNode": "b1approach00000007", "toNode": "a1about0000000008", "label": "merge" },
+    { "id": "e1000000000000a8", "fromNode": "b1enquire000000008", "toNode": "a1contact0000009", "label": "expand" },
+    { "id": "e1000000000000a9", "fromNode": "b1footer000000009", "toNode": "a1footer0000010", "label": "update" },
+    { "id": "e1000000000000b1", "fromNode": "a1nav0000000001", "toNode": "a1hero000000002", "toEnd": "none" },
+    { "id": "e1000000000000b2", "fromNode": "a1hero000000002", "toNode": "a1services00000003", "toEnd": "none" },
+    { "id": "e1000000000000b3", "fromNode": "a1services00000003", "toNode": "a1work0000000004", "toEnd": "none" },
+    { "id": "e1000000000000b4", "fromNode": "a1work0000000004", "toNode": "a1how0000000005", "toEnd": "none" },
+    { "id": "e1000000000000b5", "fromNode": "a1how0000000005", "toNode": "a1clients00000006", "toEnd": "none" },
+    { "id": "e1000000000000b6", "fromNode": "a1clients00000006", "toNode": "a1testim00000007", "toEnd": "none" },
+    { "id": "e1000000000000b7", "fromNode": "a1testim00000007", "toNode": "a1about0000000008", "toEnd": "none" },
+    { "id": "e1000000000000b8", "fromNode": "a1about0000000008", "toNode": "a1contact0000009", "toEnd": "none" },
+    { "id": "e1000000000000b9", "fromNode": "a1contact0000009", "toNode": "a1footer0000010", "toEnd": "none" }
+  ]
+}
