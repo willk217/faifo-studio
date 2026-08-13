@@ -56,6 +56,7 @@
     const data = new FormData(form);
     const name = (data.get('name') || '').toString().trim();
     const email = (data.get('email') || '').toString().trim();
+    const projectType = (data.get('projectType') || '').toString().trim();
     const message = (data.get('message') || '').toString().trim();
 
     if (!name || !email || !message) {
@@ -64,15 +65,16 @@
       return;
     }
 
-    const subject = encodeURIComponent('Enquiry — new project');
+    const subject = encodeURIComponent(`Enquiry — ${projectType || 'new project'}`);
     const lines = [
       `Name: ${name}`,
       `Email: ${email}`,
+      `Project type: ${projectType || '—'}`,
       '',
       message,
     ];
     const body = encodeURIComponent(lines.join('\n'));
-    window.location.href = `mailto:studio@faifo.studio?subject=${subject}&body=${body}`;
-    status.textContent = 'Opening your mail app, addressed to studio@faifo.studio.';
+    window.location.href = `mailto:hello@faifostudio.com?subject=${subject}&body=${body}`;
+    status.textContent = 'Opening your mail app, addressed to hello@faifostudio.com.';
   });
 })();

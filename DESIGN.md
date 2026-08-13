@@ -2,6 +2,23 @@
 
 Static, framework-free site (HTML/CSS/vanilla JS — no Node/build step). Built from the Faifo Studio brand guidelines (Edition 01, Aug.10.26) supplied as a pinned brief; the guideline deck's own "Website" slide (11/16) specified the landing-page structure directly.
 
+## Current live state — temporary landing page
+
+The site currently ships a trimmed version while the Auko case study, Clients, and Testimonials content isn't ready to publish: **Hero → Services → How we work → Contact** only. The full version (with Work: Auko, Clients, Testimonials, About) is preserved at the `full-site-v1` git tag for restoration once that content is ready — everything below this section describes that full build's design system, most of which still applies to the trimmed page (tokens, type, motion), except where noted.
+
+Fixes applied on top of the trim:
+- **Contact form was unreadable** — `.field input/textarea/select` used on-ink tokens (`--bone-50` text, `--ink-line-on-ink` borders) but the Contact section itself runs on-bone. Now uses `--ink-900` text and `--ink-line-on-bone` borders/chevron, matching the section it's actually in.
+- **Contact email corrected** — `studio@faifo.studio` was wrong everywhere it appeared; replaced with `hello@faifostudio.com` (nav panel, contact meta-bar, form note, footer, `js/main.js` mailto handler).
+- **Project type** select restored to the contact form (Real estate photography / Videography / Drone / Brand design / Brand media / Something else), matching the Services list.
+- **Availability card removed** from Contact per client request; `.availability-card` CSS deleted as dead code.
+- **Motion polish** (Emil Kowalski's public "Animations on the Web" principles — no dedicated Claude skill for this was available, so his documented guidance was applied directly): `.reveal` tightened from 700ms/18px to 500ms/14px (duration should track the distance travelled, not linger); `.btn` gained a `translateY(-1px)` hover lift on top of the existing instant-press `:active` state, so buttons feel picked-up-then-pressed rather than just recoloring.
+
+Fixes applied after an `impeccable:impeccable-finish-reviewer` pass on the trimmed page:
+- **Contact layout rebalanced** — with the Availability card gone, `.enquire__row` left ~700px of dead space on wide viewports. Rebuilt as a two-column grid: copy (heading/description/"prefer email" line) on the left, the form itself on the right, stacking to one column at the existing 860px breakpoint.
+- **The site's one brand-pinned offset shadow was orphaned** when the Availability card (its only owner) was removed. Re-homed onto `.btn.is-primary`, applied to the Contact form's "Send it →" submit button — the single most load-bearing action on this trimmed page.
+- **Keyboard focus ring was being suppressed on all form fields** — `.field input/textarea/select:focus` set `outline:none` unconditionally, which (by specificity) killed the site-wide `:focus-visible` ring for keyboard users too, not just mouse clicks. Changed to `:focus:not(:focus-visible)` so the ring still shows for keyboard/tab navigation; mouse-click focus keeps just the border-color change.
+- **Placeholder contrast bumped** from `rgba(14,14,12,.38)` to `.55` for better legibility against the bone ground.
+
 ## Stack
 
 - Plain HTML, CSS, JS. No framework, no bundler — this machine has no Node/npm installed, and a photography portfolio doesn't need one.
@@ -35,7 +52,7 @@ Grid: 12 columns, 16px gutter, 1440px max width, page margin 24px → 48px at `l
 
 Two tiers, deliberately different, per where each mandate applies:
 
-- **Page chrome** (reveals, hovers, nav): CSS only. A single authored `.reveal` fade+rise (18px, 700ms, `cubic-bezier(.2,0,.2,1)`), staggered 70ms per sibling via `IntersectionObserver` in `js/main.js`. No spring/bounce here — the brand doc explicitly specifies "no bounce" for the studio's own UI. Hover/press states use 80–140ms transform/opacity only, with instant `:active` feedback on pointer-down (not on release) per Apple's response principle. iOS Safari needs a `touchstart` listener present anywhere in the document for `:active` to fire at all on tap — added in `js/main.js`.
+- **Page chrome** (reveals, hovers, nav): CSS only. A single authored `.reveal` fade+rise (14px, 500ms, `cubic-bezier(.2,0,.2,1)`), staggered 70ms per sibling via `IntersectionObserver` in `js/main.js`. No spring/bounce here — the brand doc explicitly specifies "no bounce" for the studio's own UI. Hover/press states use 80–140ms transform/opacity only, with instant `:active` feedback on pointer-down (not on release) per Apple's response principle. iOS Safari needs a `touchstart` listener present anywhere in the document for `:active` to fire at all on tap — added in `js/main.js`.
 - **The gallery lightbox** (a real gesture surface, not page chrome): vanilla spring physics in `js/spring.js` — Apple's damping/response model (WWDC18 *Designing Fluid Interfaces*), critically damped (`damping 1.0`) by default, bounce (`damping ~0.86`) reserved *only* for a release that was already moving — a flick gets a little overshoot, a tap-to-open never does. This is the one place bounce exists on the site, and it's earned by the interaction, not decorative.
 
 `prefers-reduced-motion` disables both tiers — CSS via a blanket rule in `base.css`, springs via a `reducedMotion()` check in `spring.js` that snaps straight to the target instead of animating.
@@ -56,7 +73,7 @@ Built from `anthropic-skills:apple-design` (WWDC *Designing Fluid Interfaces* tr
 
 ## Surfaces
 
-Radius 0 everywhere. Exactly **one** offset shadow on the whole site (`box-shadow: 4px 4px 0 var(--sand-300)`), on the Availability card in Enquire — matches the brand doc's "one per page" rule, applied once sitewide since it's a single-page site.
+Radius 0 everywhere. Exactly **one** offset shadow on the whole site (`box-shadow: 4px 4px 0 var(--sand-300)`), on the primary Contact form submit button (`.btn.is-primary`) — matches the brand doc's "one per page" rule, applied once sitewide since it's a single-page site. Re-homed here from the Availability card once that card was removed from the temporary landing page.
 
 ## Brief-pinned patterns kept despite generic anti-slop defaults
 
@@ -79,7 +96,7 @@ Rebuilt from a client-supplied handoff doc (services list, featured-project copy
 8. **Contact** ("Start a project") — expanded form: added company/property name, project type and budget-range selects, alongside the existing name/email/message. Availability card (the one offset-shadow instance) unchanged.
 9. **Footer** — tagline "Creative media for brands and spaces," nav repeat, unchanged location/email/copyright.
 
-**Real content gaps, not fabricated:** an Instagram handle (the handoff doc marks this `[handle]`; omitted from the live page rather than guessed), testimonial quotes, and any logo/asset for OTA Playhouse. Contact email uses the site's existing `studio@faifo.studio` convention rather than the doc's unresolved `[email]` placeholder.
+**Real content gaps, not fabricated:** an Instagram handle (the handoff doc marks this `[handle]`; omitted from the live page rather than guessed), testimonial quotes, and any logo/asset for OTA Playhouse. Contact email is `hello@faifostudio.com` (corrected from an earlier wrong `studio@faifo.studio`, and from the doc's unresolved `[email]` placeholder before that).
 
 ## Known deployment consideration
 
