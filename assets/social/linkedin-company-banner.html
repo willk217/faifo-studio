@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Faifo Studio — LinkedIn company banner</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 2256px; height: 382px; overflow: hidden; }
+  body {
+    background: var(--ink-900);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 88px;
+    font-family: var(--font-grotesk);
+  }
+  .brand { display: flex; align-items: center; gap: 28px; }
+  .brand img { width: 76px; height: 76px; }
+  .brand span {
+    font-family: var(--font-grotesk);
+    font-weight: 600;
+    font-variation-settings: 'wdth' 112;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--bone-50);
+    font-size: 58px;
+    line-height: 1;
+  }
+  .slogan {
+    text-align: right;
+    font-family: var(--font-grotesk);
+    font-weight: 600;
+    font-variation-settings: 'wdth' 112;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    color: var(--bone-50);
+    font-size: 46px;
+    line-height: 1.05;
+    max-width: 1240px;
+  }
+</style>
+</head>
+<body>
+  <div class="brand">
+    <img src="../logo/mark-nav.png" alt="">
+    <span>Faifo Studio</span>
+  </div>
+  <div class="slogan">Creative media for<br>brands and spaces.</div>
+</body>
+</html>

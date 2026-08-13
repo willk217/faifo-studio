@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Faifo Studio — LinkedIn personal banner</title>
+<link rel="stylesheet" href="../../css/tokens.css">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 3168px; height: 792px; overflow: hidden; }
+  body {
+    background: var(--ink-900);
+    font-family: var(--font-grotesk);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-row {
+    flex: none;
+    margin: 72px 96px 0;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--ink-line-on-ink);
+  }
+  .top-row img { width: 52px; height: 52px; }
+  .top-row span {
+    font-family: var(--font-grotesk);
+    font-weight: 600;
+    font-variation-settings: 'wdth' 112;
+    letter-spacing: var(--tracking-display);
+    text-transform: uppercase;
+    color: var(--bone-50);
+    font-size: 32px;
+    line-height: 1;
+  }
+
+  .headline-wrap {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin: 0 96px;
+  }
+  .headline-wrap h1 {
+    font-family: var(--font-grotesk);
+    font-weight: 600;
+    font-variation-settings: 'wdth' 112;
+    letter-spacing: -0.05em;
+    line-height: .94;
+    text-transform: uppercase;
+    color: var(--bone-50);
+    font-size: 122px;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+  <div class="top-row">
+    <img src="../logo/mark-nav.png" alt="">
+    <span>Faifo Studio</span>
+  </div>
+
+  <div class="headline-wrap">
+    <h1>Creative media for<br>brands and spaces.</h1>
+  </div>
+</body>
+</html>
