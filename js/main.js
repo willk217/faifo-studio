@@ -141,4 +141,56 @@
 
     hero.addEventListener('pointerleave', () => { lastX = lastY = null; });
   }
+
+  // Scroll stepper (test) — pins the section and wipes through frames as the
+  // page scrolls, clip-path driven (same technique as verostudio.com's
+  // pinned reveal). Reduced-motion gets a static first frame instead — see
+  // the matching CSS media query, which also collapses the tall scroll track.
+  const stepper = document.getElementById('scroll-test');
+  if (stepper && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const track = stepper.querySelector('.scroll-stepper__track');
+    const frames = [...stepper.querySelectorAll('.scroll-stepper__frame')];
+    const indexEl = stepper.querySelector('.scroll-stepper__index');
+    const titleEl = stepper.querySelector('.scroll-stepper__title');
+    const descEl = stepper.querySelector('.scroll-stepper__desc');
+    const services = [
+      { title: 'Real estate<br>photography', desc: 'The kind of images that make a space feel like somewhere you’d want to be, not just document it exists.' },
+      { title: 'Videography', desc: 'Property films, hotel and resort walkthroughs, brand films. Shot to be watched, not skipped.' },
+      { title: 'Drone', desc: 'Aerial coverage for properties, resorts, and land that photos on the ground can’t show.' },
+      { title: 'Brand design', desc: 'Logos, visual identity, brand guidelines. The system that holds everything else together.' },
+      { title: 'Brand media', desc: 'Ongoing content, social assets, campaign shoots. For brands that need more than a one-off.' },
+    ];
+    const steps = frames.length;
+    let ticking = false;
+    let lastStep = -1;
+
+    function update() {
+      ticking = false;
+      const rect = track.getBoundingClientRect();
+      const scrollable = rect.height - window.innerHeight;
+      const progress = Math.min(1, Math.max(0, -rect.top / scrollable));
+      const stepProgress = progress * (steps - 1);
+
+      // Frame 0 is the resting base layer (always fully visible, per its CSS
+      // default) — only frames 1..N-1 wipe in on top of it as scroll passes
+      // each one's slot, each covering the frame beneath.
+      for (let i = 1; i < frames.length; i++) {
+        const p = Math.min(1, Math.max(0, stepProgress - (i - 1)));
+        frames[i].style.clipPath = `inset(0 0 0 ${(1 - p) * 100}%)`;
+      }
+
+      const current = Math.min(steps - 1, Math.floor(stepProgress));
+      if (current !== lastStep) {
+        lastStep = current;
+        indexEl.textContent = `${String(current + 1).padStart(2, '0')} / ${String(steps).padStart(2, '0')}`;
+        titleEl.innerHTML = services[current]?.title || '';
+        descEl.textContent = services[current]?.desc || '';
+      }
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
 })();
