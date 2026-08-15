@@ -274,56 +274,6 @@
 }
 @keyframes scrollrun { to { top: 100%; } }
 
-/* ---------- scroll stepper (test) ---------- */
-
-.scroll-stepper__track { height: 600vh; position: relative; }
-
-.scroll-stepper__sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  background: var(--ink-900);
-}
-
-.scroll-stepper__frames { position: relative; width: 100%; height: 100%; }
-
-.scroll-stepper__frame {
-  position: absolute;
-  inset: 0;
-  clip-path: inset(0 0 0 100%);
-}
-.scroll-stepper__frame:first-child { clip-path: inset(0 0 0 0%); }
-.scroll-stepper__frame img { width: 100%; height: 100%; object-fit: cover; }
-
-.scroll-stepper__scrim {
-  position: absolute;
-  inset: 0;
-  z-index: 5;
-  background: linear-gradient(to top, rgba(14,14,12,.85) 0%, rgba(14,14,12,.35) 45%, rgba(14,14,12,.05) 70%);
-  pointer-events: none;
-}
-
-.scroll-stepper__overlay {
-  position: absolute;
-  left: var(--page-margin);
-  right: var(--page-margin);
-  bottom: var(--sp-8);
-  z-index: 10;
-  color: var(--bone-50);
-  max-width: 900px;
-}
-.scroll-stepper__index { display: block; color: var(--ink-meta-on-ink); margin-bottom: var(--sp-4); }
-.scroll-stepper__title { margin-bottom: var(--sp-4); }
-.scroll-stepper__desc { color: var(--ink-body-on-ink); }
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-stepper__track { height: auto; }
-  .scroll-stepper__sticky { position: relative; height: 70vh; }
-  .scroll-stepper__frame { clip-path: inset(0 0 0 100%) !important; }
-  .scroll-stepper__frame:first-child { clip-path: inset(0 0 0 0%) !important; }
-}
-
 /* ---------- section header ---------- */
 
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--sp-8); flex-wrap: wrap; margin-bottom: var(--sp-8); }
