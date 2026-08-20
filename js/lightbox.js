@@ -34,7 +34,7 @@
   const yTracker = S.VelocityTracker(120);
 
   function buildGallery() {
-    const figs = document.querySelectorAll('#work .mosaic figure');
+    const figs = document.querySelectorAll('.mosaic figure');
     gallery = Array.from(figs).map((fig, i) => {
       const im = fig.querySelector('img');
       const cap = fig.querySelector('figcaption');

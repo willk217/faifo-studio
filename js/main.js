@@ -141,4 +141,15 @@
 
     hero.addEventListener('pointerleave', () => { lastX = lastY = null; });
   }
+
+  // FAQ accordion — plain button + region, not native <details>, so the
+  // open/close height can transition smoothly (grid-template-rows trick)
+  // instead of the hard cut native details gives on most browsers.
+  document.querySelectorAll('.faq__item').forEach((item) => {
+    const btn = item.querySelector('.faq__q');
+    btn?.addEventListener('click', () => {
+      const isOpen = item.classList.toggle('is-open');
+      btn.setAttribute('aria-expanded', String(isOpen));
+    });
+  });
 })();
