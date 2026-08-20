@@ -14,6 +14,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <title>Faifo Studio — Creative media for brands and spaces</title>
 <meta name="description" content="Faifo Studio is a Hoi An based creative studio: photography, cinematography, and brand identity for hospitality brands and property developers.">
 <link rel="icon" href="assets/logo/mark-ink.png">
+<meta name="theme-color" content="#0E0E0C">
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/style.css">
@@ -25,7 +26,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <header class="nav on-ink">
   <div class="nav__row">
     <a class="nav__brand" href="#top" aria-label="Faifo Studio, home">
-      <img src="assets/logo/mark-nav.png" alt="">
+      <img src="assets/logo/mark-nav.png" width="1024" height="1024" alt="">
       <span>Faifo Studio</span>
     </a>
     <nav class="nav__links" aria-label="Primary">
@@ -41,7 +42,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 <div class="nav-panel" id="navPanel">
   <div class="nav__row" style="padding:0;">
-    <span class="nav__brand"><img src="assets/logo/mark-nav.png" alt=""><span>Faifo Studio</span></span>
+    <span class="nav__brand"><img src="assets/logo/mark-nav.png" width="1024" height="1024" alt=""><span>Faifo Studio</span></span>
     <button class="nav-panel__close" id="navClose" aria-label="Close menu">
       <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.3"/></svg>
     </button>
@@ -94,30 +95,39 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
         <p class="body-text" style="color:var(--ink-meta-on-bone)">Three things, done properly. Not a menu of everything, just the work we're actually good at.</p>
       </div>
 
-      <div class="service-overview reveal">
-        <a class="service-overview__item" href="photography.html">
-          <span class="service-overview__num">01</span>
-          <div class="service-overview__body">
-            <span class="service-overview__title">Photography</span>
-            <span class="service-overview__desc">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be. Ground level or aerial, whatever the property needs.</span>
+      <div class="service-features">
+        <a class="service-feature reveal" href="photography.html">
+          <div class="service-feature__media">
+            <img src="assets/photo/auko/lodge-canopy-01.jpg" width="2500" height="1667" alt="Canopy lodge interior, timber-panelled bed with warm lamplight" loading="lazy">
           </div>
-          <span class="service-overview__link">Learn more →</span>
+          <div class="service-feature__body">
+            <span class="service-feature__num">01</span>
+            <h3 class="h-section service-feature__title">Photography</h3>
+            <p class="service-feature__desc">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be. Ground level or aerial, whatever the property needs.</p>
+            <span class="service-feature__link">Learn more →</span>
+          </div>
         </a>
-        <a class="service-overview__item" href="cinematography.html">
-          <span class="service-overview__num">02</span>
-          <div class="service-overview__body">
-            <span class="service-overview__title">Cinematography</span>
-            <span class="service-overview__desc">Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.</span>
+        <a class="service-feature reveal" href="cinematography.html">
+          <div class="service-feature__media">
+            <img src="assets/photo/auko/overview-02-dusk.jpg" width="2500" height="1875" alt="The lodges lit warm at dusk against the dark cliff face" loading="lazy">
           </div>
-          <span class="service-overview__link">Learn more →</span>
+          <div class="service-feature__body">
+            <span class="service-feature__num">02</span>
+            <h3 class="h-section service-feature__title">Cinematography</h3>
+            <p class="service-feature__desc">Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.</p>
+            <span class="service-feature__link">Learn more →</span>
+          </div>
         </a>
-        <a class="service-overview__item" href="brand-identity.html">
-          <span class="service-overview__num">03</span>
-          <div class="service-overview__body">
-            <span class="service-overview__title">Brand identity</span>
-            <span class="service-overview__desc">Logos, visual identity, and the guidelines that keep a brand looking like itself, plus the content that follows once the system exists.</span>
+        <a class="service-feature reveal" href="brand-identity.html">
+          <div class="service-feature__media">
+            <img src="assets/photo/auko/welcome-01.jpg" width="2500" height="1667" alt="The welcome pavilion, bamboo structure with mountain views" loading="lazy">
           </div>
-          <span class="service-overview__link">Learn more →</span>
+          <div class="service-feature__body">
+            <span class="service-feature__num">03</span>
+            <h3 class="h-section service-feature__title">Brand identity</h3>
+            <p class="service-feature__desc">Logos, visual identity, and the guidelines that keep a brand looking like itself, plus the content that follows once the system exists.</p>
+            <span class="service-feature__link">Learn more →</span>
+          </div>
         </a>
       </div>
     </div>
@@ -190,7 +200,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
             </div>
             <div class="field" style="grid-column: span 6;">
               <label for="f-email">Email</label>
-              <input id="f-email" name="email" type="email" required autocomplete="email" placeholder="you@company.com">
+              <input id="f-email" name="email" type="email" required autocomplete="email" spellcheck="false" placeholder="you@company.com">
             </div>
             <div class="field" style="grid-column: span 12;">
               <label for="f-type">Project type</label>
@@ -219,7 +229,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <footer class="footer on-ink hairline-top">
   <div class="wrap">
     <div class="footer__mark">
-      <img src="assets/logo/mark-nav.png" alt="Faifo Studio mark">
+      <img src="assets/logo/mark-nav.png" width="1024" height="1024" alt="Faifo Studio mark">
       <span class="h-section" style="font-size:clamp(1.8rem,3vw,3.2rem)">Faifo studio</span>
     </div>
     <p class="meta-sm" style="color:var(--ink-meta-on-ink); margin-bottom:var(--sp-6)">Creative media for brands and spaces</p>

@@ -129,11 +129,18 @@
       setTimeout(() => img.remove(), 700); // fallback if transitionend never fires
     }
 
+    // Cached, not read on every pointermove — a forced layout read that often
+    // would jank the very effect it's positioning. Refreshed on enter/resize.
+    let heroRect = null;
+    const refreshRect = () => { heroRect = hero.getBoundingClientRect(); };
+    hero.addEventListener('pointerenter', refreshRect);
+    window.addEventListener('resize', refreshRect, { passive: true });
+
     hero.addEventListener('pointermove', (e) => {
       if (e.pointerType !== 'mouse') return;
-      const rect = hero.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
+      if (!heroRect) refreshRect();
+      const x = e.clientX - heroRect.left;
+      const y = e.clientY - heroRect.top;
       if (lastX !== null && Math.hypot(x - lastX, y - lastY) < MIN_DIST) return;
       lastX = x; lastY = y;
       spawn(x, y);
