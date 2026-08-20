@@ -425,6 +425,78 @@
 .mosaic figure[tabindex]:active img { transform: scale(1.01); transition-duration: 100ms; }
 .mosaic figure[tabindex]:focus-visible { outline: 2px solid var(--ink-900); outline-offset: 2px; }
 
+/* ---------- filmstrip gallery — wheel-driven horizontal scroll, real photos ---------- */
+/* Bleeds past .wrap's max-width to the section's own edges — a wider, more
+   cinematic frame than the centered content column. Native overflow-x is the
+   accessible baseline (touch, trackpad, keyboard all just work); js/main.js
+   only adds a wheel->horizontal translation and a cursor-follow cue on top. */
+
+.filmstrip-wrap { position: relative; margin-top: var(--sp-8); margin-inline: calc(-1 * var(--page-margin)); }
+
+.filmstrip {
+  column-count: unset;
+  display: flex;
+  align-items: flex-end;
+  gap: var(--sp-5);
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x proximity;
+  /* Generous top padding is reserved headroom, not decoration — a hovered
+     figure scales up from its bottom edge into this space. overflow-x:auto
+     forces overflow-y to clip too (the CSS spec pairs them), so growth has
+     to fit inside the box rather than escape it. */
+  padding: 16vh var(--page-margin) var(--sp-5);
+  margin-top: 0;
+  scrollbar-width: none;
+}
+.filmstrip::-webkit-scrollbar { display: none; }
+.filmstrip figure {
+  flex: none;
+  height: 50vh;
+  max-height: 500px;
+  margin: 0;
+  scroll-snap-align: start;
+}
+.filmstrip img { width: auto; height: 100%; max-width: none; display: block; }
+
+.filmstrip figure[tabindex] {
+  transform-origin: bottom center;
+  transition: transform 420ms var(--ease-standard);
+}
+.filmstrip figure[tabindex]:hover,
+.filmstrip figure[tabindex]:focus-visible {
+  transform: scale(1.26);
+  z-index: 3;
+}
+.filmstrip figure[tabindex]:active { transform: scale(1.2); transition-duration: 140ms; }
+
+.filmstrip-progress { height: 2px; margin: 0 var(--page-margin); background: var(--ink-line-on-bone); }
+.filmstrip-progress__bar { height: 100%; width: 0%; background: var(--ink-900); transition: width 80ms linear; }
+
+.filmstrip-cursor {
+  position: absolute;
+  top: 0; left: 0;
+  width: 84px; height: 84px;
+  border-radius: 50%;
+  background: var(--ink-900);
+  color: var(--bone-50);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--font-mono); font-size: .6875rem; text-transform: uppercase; letter-spacing: .1em;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(.7);
+  transition: opacity 200ms var(--ease-standard), transform 200ms var(--ease-standard);
+  z-index: 5;
+}
+.filmstrip-cursor.is-active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+
+@media (max-width: 700px) {
+  .filmstrip { padding-top: var(--sp-6); }
+  .filmstrip figure { height: 46vh; }
+  .filmstrip figure[tabindex]:hover, .filmstrip figure[tabindex]:focus-visible, .filmstrip figure[tabindex]:active { transform: none; }
+  .filmstrip-cursor { display: none; }
+}
+
 /* ---------- lightbox ---------- */
 
 .lightbox {

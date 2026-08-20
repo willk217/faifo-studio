@@ -159,4 +159,41 @@
       btn.setAttribute('aria-expanded', String(isOpen));
     });
   });
+
+  // Filmstrip gallery (Photography proof) — native overflow-x scroll stays
+  // the accessible baseline (touch/trackpad/keyboard already work); this
+  // just translates vertical wheel input into horizontal movement, tracks
+  // scroll progress, and shows a cursor-follow "View" cue on fine pointers.
+  const filmstrip = document.getElementById('filmstrip');
+  if (filmstrip) {
+    filmstrip.addEventListener('wheel', (e) => {
+      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+      e.preventDefault();
+      filmstrip.scrollLeft += e.deltaY;
+    }, { passive: false });
+
+    const progressBar = document.querySelector('.filmstrip-progress__bar');
+    function updateProgress() {
+      const max = filmstrip.scrollWidth - filmstrip.clientWidth;
+      const pct = max > 0 ? Math.min(100, (filmstrip.scrollLeft / max) * 100) : 0;
+      if (progressBar) progressBar.style.width = pct + '%';
+    }
+    filmstrip.addEventListener('scroll', updateProgress, { passive: true });
+    updateProgress();
+
+    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches
+        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      const cursor = document.querySelector('.filmstrip-cursor');
+      const wrap = filmstrip.closest('.filmstrip-wrap');
+      wrap?.addEventListener('pointermove', (e) => {
+        const rect = wrap.getBoundingClientRect();
+        cursor.style.left = (e.clientX - rect.left) + 'px';
+        cursor.style.top = (e.clientY - rect.top) + 'px';
+      });
+      filmstrip.querySelectorAll('figure').forEach((fig) => {
+        fig.addEventListener('pointerenter', () => cursor?.classList.add('is-active'));
+        fig.addEventListener('pointerleave', () => cursor?.classList.remove('is-active'));
+      });
+    }
+  }
 })();
