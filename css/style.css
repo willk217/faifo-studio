@@ -219,6 +219,27 @@
 
 .hero__top { display: flex; justify-content: space-between; }
 
+/* Cursor trail — desktop/mouse only (gated in JS behind hover+fine-pointer
+   and reduced-motion). Sits above the hero background, below the copy. */
+.hero__trail { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.hero__trail-img {
+  position: absolute;
+  top: 0; left: 0;
+  width: 220px;
+  height: 280px;
+  object-fit: cover;
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.92);
+  transition: opacity 260ms var(--ease-standard), transform 420ms var(--ease-standard);
+  box-shadow: 4px 4px 0 var(--ink-900);
+}
+.hero__trail-img.is-in { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+.hero__trail-img.is-out { opacity: 0; transform: translate(-50%, -50%) scale(0.96); }
+
+@media (max-width: 860px), (hover: none), (pointer: coarse) {
+  .hero__trail { display: none; }
+}
+
 .hero__body {
   display: flex;
   flex-direction: column;
@@ -283,12 +304,6 @@
 
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--sp-8); flex-wrap: wrap; margin-bottom: var(--sp-8); }
 
-.doctrine { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-7); margin-top: var(--sp-8); }
-.doctrine > * { min-width: 0; }
-.doctrine__item { display: flex; flex-direction: column; gap: var(--sp-3); padding-top: var(--sp-5); border-top: 1px solid var(--ink-line-on-ink); }
-.on-bone .doctrine__item { border-top-color: var(--ink-line-on-bone); }
-.doctrine__item span:last-child { font-size: 1.125rem; letter-spacing: -.01em; }
-
 /* ---------- enquire ---------- */
 
 .enquire__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--sp-9); align-items: center; }
@@ -329,18 +344,10 @@
 
 /* ---------- responsive ---------- */
 
-@media (max-width: 1024px) {
-  .doctrine { grid-template-columns: 1fr 1fr; }
-}
-
 @media (max-width: 860px) {
-  .doctrine { grid-template-columns: 1fr; }
-
   .enquire__row { grid-template-columns: 1fr; }
 
   .h-display { font-size: clamp(2.4rem, 9vw, 3.6rem); }
-
-  .hero__top { flex-direction: column; gap: var(--sp-2); }
 }
 
 /* mobile nav panel */
@@ -398,33 +405,6 @@
 .dash-list li { display: flex; gap: var(--sp-4); font-size: 1.0625rem; line-height: 1.5; }
 .dash-list li::before { content: "—"; flex: none; color: var(--clay-500); font-family: var(--font-mono); }
 
-/* ---------- FAQ accordion ---------- */
-
-.faq { margin-top: var(--sp-7); border-top: 1px solid var(--ink-line-on-bone); }
-.on-ink .faq { border-top-color: var(--ink-line-on-ink); }
-.faq__item { border-bottom: 1px solid var(--ink-line-on-bone); }
-.on-ink .faq__item { border-bottom-color: var(--ink-line-on-ink); }
-.faq__item h3 { font-weight: inherit; }
-.faq__q {
-  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: var(--sp-5);
-  padding: var(--sp-6) 0; background: none; border: none; text-align: left; cursor: pointer;
-  font-family: var(--font-grotesk); font-size: 1.1875rem; font-weight: 500; letter-spacing: -.01em; color: inherit;
-  transition: opacity 100ms ease-out;
-}
-.faq__q:active { opacity: .6; transition-duration: 80ms; }
-.faq__icon { flex: none; width: 20px; height: 20px; position: relative; }
-.faq__icon::before, .faq__icon::after { content: ""; position: absolute; top: 50%; left: 50%; background: currentColor; }
-.faq__icon::before { width: 14px; height: 1px; transform: translate(-50%, -50%); }
-.faq__icon::after { width: 1px; height: 14px; transform: translate(-50%, -50%); transition: transform var(--motion-panel) var(--ease-standard); }
-.faq__item.is-open .faq__icon::after { transform: translate(-50%, -50%) rotate(90deg); }
-.faq__a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows var(--motion-panel) var(--ease-standard); }
-.faq__item.is-open .faq__a { grid-template-rows: 1fr; }
-.faq__a-inner { overflow: hidden; }
-.faq__a-inner p { padding-bottom: var(--sp-6); max-width: 62ch; }
-.on-bone .faq__a-inner p { color: var(--ink-meta-on-bone); }
-.on-ink .faq__a-inner p { color: var(--ink-body-on-ink); }
-.faq__q:focus-visible { outline: 2px solid var(--ink-900); outline-offset: 2px; }
-.on-ink .faq__q:focus-visible { outline-color: var(--bone-50); }
 
 /* ---------- services pin — full-viewport scroll-pinned takeover, real photography ---------- */
 /* Replaces the old alternating-row list. Three panels cross-fade as the section
@@ -482,8 +462,9 @@
 
 .services-pin__panel {
   position: relative;
-  flex: none;
-  width: calc(100% / 3);
+  flex: 1 0 0; /* equal thirds via flex distribution, not a rounded % string —
+                  calc(100%/3) can leave a hairline sub-pixel gap between
+                  panels in some browsers; flex-basis 0 divides exactly. */
   height: 100%;
   display: block;
 }
@@ -502,10 +483,15 @@
   background: linear-gradient(to top, rgba(14,14,12,.82) 0%, rgba(14,14,12,.35) 42%, rgba(14,14,12,.08) 68%);
 }
 
+/* Captions are pinned to the sticky viewport, not the sliding track — a
+   panel's title only ever cross-fades in place, it never travels
+   horizontally, so it can't be caught half off-frame mid-slide the way it
+   was when .services-pin__body lived inside each panel. */
+.services-pin__captions { position: absolute; inset: 0; z-index: 2; }
+
 .services-pin__body {
   position: absolute;
   left: 0; right: 0; bottom: 0;
-  z-index: 2;
   padding: 0 var(--page-margin) var(--sp-9);
   max-width: var(--grid-max);
   margin-inline: auto;
@@ -517,7 +503,7 @@
   opacity: 0;
   transition: opacity 550ms var(--ease-standard) 80ms, transform 550ms var(--ease-standard) 80ms;
 }
-.services-pin__panel.is-active .services-pin__body { opacity: 1; transform: translateY(0); }
+.services-pin__body.is-active { opacity: 1; transform: translateY(0); }
 
 .services-pin__num { font-family: var(--font-mono); font-size: 1rem; letter-spacing: .1em; color: var(--sand-300); }
 .services-pin__title { max-width: 14ch; }
@@ -526,7 +512,9 @@
 @media (max-width: 860px) {
   /* Pinned scroll-hijacking (and the horizontal track slide) get janky
      against mobile browser chrome and touch physics — degrade to a plain
-     stacked sequence, still full-bleed and big. */
+     stacked sequence, still full-bleed and big. Captions move back inside
+     each panel here (one panel visible at a time, no slide to catch them
+     mid-transition), stacked in normal flow after the panel's own media. */
   .services-pin__scroller { height: auto; }
   .services-pin__sticky { position: static; height: auto; display: flex; flex-direction: column; }
   .services-pin__bar, .services-pin__rail { display: none; }
@@ -537,23 +525,16 @@
     border-top: 1px solid var(--ink-line-on-ink);
   }
   .services-pin__img { transform: scale(1); transition: none; }
-  .services-pin__body { transform: none; opacity: 1; padding-bottom: var(--sp-8); }
+  /* JS (main.js) moves each .services-pin__body back into its matching
+     .services-pin__panel at this breakpoint, restoring the pre-decoupling
+     per-panel layout — mobile never had the desktop mid-slide cut-off bug
+     (no sliding track here), so it just needs its caption anchored inside
+     the panel it belongs to, absolutely positioned same as the base rule. */
+  .services-pin__body { opacity: 1; transform: none; padding-bottom: var(--sp-8); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .services-pin__img, .services-pin__panel.is-active .services-pin__img { transition: none; transform: scale(1); }
-}
-
-/* ---------- media row — generic photo + content pairing (Contact's facts row, etc.) ---------- */
-
-.media-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-8); align-items: center; }
-.media-row__media { overflow: hidden; }
-.media-row__media img { width: 100%; height: auto; display: block; transition: transform 700ms var(--ease-standard); }
-.media-row:hover .media-row__media img, .media-row:focus-within .media-row__media img { transform: scale(1.03); }
-.media-row__body { display: flex; flex-direction: column; gap: var(--sp-4); }
-
-@media (max-width: 860px) {
-  .media-row { grid-template-columns: 1fr; }
 }
 
 /* ---------- select fields ---------- */

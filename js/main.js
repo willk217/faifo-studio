@@ -51,6 +51,79 @@
     if (e.key === 'Escape' && panel.classList.contains('is-open')) closeNav();
   });
 
+  // Hero cursor trail — a handful of photos spawn and fade along the mouse
+  // path across the hero. Desktop/mouse only: gated behind hover+fine-pointer
+  // (matches the CSS media query hiding .hero__trail on touch/small screens)
+  // and reduced-motion, so nothing here runs or matters where it's hidden.
+  const heroTrail = document.getElementById('heroTrail');
+  const heroEl = document.querySelector('.hero');
+  if (
+    heroTrail && heroEl &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  ) {
+    const TRAIL_IMAGES = [
+      'assets/photo/personal/mountain-window.jpg',
+      'assets/photo/personal/murmurations.jpg',
+      'assets/photo/personal/vietnam-bike-mountains.jpg',
+      'assets/photo/personal/waterfall.jpg',
+      'assets/photo/auko/lifestyle-01.jpg',
+      'assets/photo/auko/lodge-canopy-01.jpg',
+    ];
+    const MIN_DIST = 110; // px the pointer must travel before the next image spawns
+    const MAX_LIVE = 5;   // images kept in the DOM at once
+    const HOLD_MS = 550;  // how long a spawned image stays before it starts fading out
+
+    let heroRect = heroEl.getBoundingClientRect();
+    function measureHero() { heroRect = heroEl.getBoundingClientRect(); }
+    window.addEventListener('resize', measureHero, { passive: true });
+
+    const live = [];
+    let lastX = null, lastY = null, lastIndex = -1;
+
+    function retire(img) {
+      img.classList.remove('is-in');
+      img.classList.add('is-out');
+      img.addEventListener('transitionend', () => img.remove(), { once: true });
+      setTimeout(() => img.remove(), 500); // fallback if transitionend never fires
+    }
+
+    function spawn(x, y) {
+      let index = Math.floor(Math.random() * TRAIL_IMAGES.length);
+      if (index === lastIndex) index = (index + 1) % TRAIL_IMAGES.length;
+      lastIndex = index;
+
+      const img = document.createElement('img');
+      img.className = 'hero__trail-img';
+      img.src = TRAIL_IMAGES[index];
+      img.alt = '';
+      img.style.left = x + 'px';
+      img.style.top = y + 'px';
+      heroTrail.appendChild(img);
+      requestAnimationFrame(() => img.classList.add('is-in'));
+
+      live.push(img);
+      if (live.length > MAX_LIVE) retire(live.shift());
+
+      setTimeout(() => {
+        const i = live.indexOf(img);
+        if (i !== -1) { live.splice(i, 1); retire(img); }
+      }, HOLD_MS);
+    }
+
+    heroEl.addEventListener('pointerenter', measureHero);
+    heroEl.addEventListener('pointermove', (e) => {
+      const x = e.clientX - heroRect.left;
+      const y = e.clientY - heroRect.top;
+      if (lastX !== null) {
+        const dx = x - lastX, dy = y - lastY;
+        if (Math.sqrt(dx * dx + dy * dy) < MIN_DIST) return;
+      }
+      lastX = x; lastY = y;
+      spawn(x, y);
+    });
+  }
+
   // Reveal on scroll — one authored moment, staggered by DOM order within a section
   const revealEls = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window && revealEls.length) {
@@ -155,10 +228,21 @@
   // breakpoint; below it CSS forces every panel to a plain stacked, always-
   // visible sequence, so nothing here needs to run (or matter) on touch.
   const servicesPin = document.querySelector('.services-pin');
+  if (servicesPin && !window.matchMedia('(min-width: 861px)').matches) {
+    // Mobile stacks panels in plain document flow (no sliding track, so
+    // captions were never at risk of the desktop mid-slide cut-off bug) —
+    // move each caption back inside its matching panel so it's positioned
+    // and sized the same way the pre-decoupling layout always worked here.
+    const panels = Array.from(servicesPin.querySelectorAll('.services-pin__panel'));
+    const bodies = Array.from(servicesPin.querySelectorAll('.services-pin__body'));
+    panels.forEach((p, i) => { if (bodies[i]) p.appendChild(bodies[i]); });
+  }
+
   if (servicesPin && window.matchMedia('(min-width: 861px)').matches) {
     const scroller = servicesPin.querySelector('.services-pin__scroller');
     const track = servicesPin.querySelector('.services-pin__track');
     const panels = Array.from(servicesPin.querySelectorAll('.services-pin__panel'));
+    const captions = Array.from(servicesPin.querySelectorAll('.services-pin__body'));
     const dots = Array.from(servicesPin.querySelectorAll('.services-pin__dot'));
     const counter = servicesPin.querySelector('[data-current]');
 
@@ -193,6 +277,7 @@
     function applyDiscreteState(progress) {
       const index = Math.min(panels.length - 1, Math.round(progress * (panels.length - 1)));
       panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
+      captions.forEach((c, i) => c.classList.toggle('is-active', i === index));
       dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
       if (counter) counter.textContent = String(index + 1).padStart(2, '0');
       if (canPlayBg && index === 1 && !bgStarted) {
@@ -237,51 +322,4 @@
     window.addEventListener('resize', () => { measure(); update(); }, { passive: true });
   }
 
-  // FAQ accordion — plain button + region, not native <details>, so the
-  // open/close height can transition smoothly (grid-template-rows trick)
-  // instead of the hard cut native details gives on most browsers.
-  document.querySelectorAll('.faq__item').forEach((item) => {
-    const btn = item.querySelector('.faq__q');
-    btn?.addEventListener('click', () => {
-      const isOpen = item.classList.toggle('is-open');
-      btn.setAttribute('aria-expanded', String(isOpen));
-    });
-  });
-
-  // Filmstrip gallery (Photography proof) — native overflow-x scroll stays
-  // the accessible baseline (touch/trackpad/keyboard already work); this
-  // just translates vertical wheel input into horizontal movement, tracks
-  // scroll progress, and shows a cursor-follow "View" cue on fine pointers.
-  const filmstrip = document.getElementById('filmstrip');
-  if (filmstrip) {
-    filmstrip.addEventListener('wheel', (e) => {
-      if (Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
-      e.preventDefault();
-      filmstrip.scrollLeft += e.deltaY;
-    }, { passive: false });
-
-    const progressBar = document.querySelector('.filmstrip-progress__bar');
-    function updateProgress() {
-      const max = filmstrip.scrollWidth - filmstrip.clientWidth;
-      const pct = max > 0 ? Math.min(100, (filmstrip.scrollLeft / max) * 100) : 0;
-      if (progressBar) progressBar.style.width = pct + '%';
-    }
-    filmstrip.addEventListener('scroll', updateProgress, { passive: true });
-    updateProgress();
-
-    if (window.matchMedia('(hover: hover) and (pointer: fine)').matches
-        && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      const cursor = document.querySelector('.filmstrip-cursor');
-      const wrap = filmstrip.closest('.filmstrip-wrap');
-      wrap?.addEventListener('pointermove', (e) => {
-        const rect = wrap.getBoundingClientRect();
-        cursor.style.left = (e.clientX - rect.left) + 'px';
-        cursor.style.top = (e.clientY - rect.top) + 'px';
-      });
-      filmstrip.querySelectorAll('figure').forEach((fig) => {
-        fig.addEventListener('pointerenter', () => cursor?.classList.add('is-active'));
-        fig.addEventListener('pointerleave', () => cursor?.classList.remove('is-active'));
-      });
-    }
-  }
 })();
