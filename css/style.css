@@ -229,35 +229,20 @@
   overflow: hidden;
 }
 
-.hero__trail { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-
-.hero__trail-img {
-  position: absolute;
-  top: 0; left: 0;
-  width: 200px;
-  height: auto;
-  transform: translate(-50%, -50%) scale(.92);
-  opacity: 0;
-  transition: opacity 260ms var(--ease-standard), transform 260ms var(--ease-standard);
-  will-change: opacity, transform;
-}
-.hero__trail-img.is-in { opacity: .92; transform: translate(-50%, -50%) scale(1); }
-.hero__trail-img.is-out { opacity: 0; transform: translate(-50%, -50%) scale(.96); transition-duration: 480ms; }
-
 .hero__content { position: relative; z-index: 2; max-width: var(--grid-max); margin-inline: auto; width: 100%; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
 
 .hero__top { display: flex; justify-content: space-between; }
 
 .hero__body {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: var(--sp-8);
-  flex-wrap: wrap;
-  margin-top: auto;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: var(--sp-6);
+  margin: auto 0;
 }
-
-.hero__lead { margin-bottom: var(--sp-3); color: var(--ink-body-on-ink); }
+.hero__body .h-display { max-width: 20ch; }
+.hero__body .hero__ctas { margin-top: 0; }
 
 .hero__scroll {
   position: relative;
@@ -278,6 +263,35 @@
   animation: scrollrun 2.2s var(--ease-standard) infinite;
 }
 @keyframes scrollrun { to { top: 100%; } }
+
+/* ---------- statement — scroll-scrubbed word reveal ---------- */
+/* Default state is fully lit (every .word at opacity:1) — this is the no-JS
+   and reduced-motion baseline, a plainly readable paragraph. main.js only
+   dims words in via inline opacity once it confirms motion is allowed, so a
+   script failure never leaves the statement stuck half-legible. */
+
+.statement { padding-block: var(--sp-9); }
+.statement__text {
+  font-family: var(--font-grotesk);
+  font-weight: 500;
+  letter-spacing: -.01em;
+  line-height: 1.35;
+  font-size: clamp(1.75rem, 1.6vw + 1.3rem, 3.25rem);
+  max-width: 32ch;
+  text-wrap: pretty;
+}
+.statement__text .word {
+  display: inline-block;
+  opacity: 1;
+  filter: blur(0);
+  transform: translateY(0);
+  transition: opacity 90ms ease-out, filter 90ms ease-out, transform 90ms ease-out;
+  will-change: opacity, filter, transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .statement__text .word { filter: none !important; transform: none !important; }
+}
 
 /* ---------- section header ---------- */
 
@@ -657,46 +671,136 @@
 .faq__q:focus-visible { outline: 2px solid var(--ink-900); outline-offset: 2px; }
 .on-ink .faq__q:focus-visible { outline-color: var(--bone-50); }
 
-/* ---------- service features — large alternating rows, real photography ---------- */
+/* ---------- services pin — full-viewport scroll-pinned takeover, real photography ---------- */
+/* Replaces the old alternating-row list. Three panels cross-fade as the section
+   scrolls past; the sticky stage sits under the nav's z-index so the translucent
+   nav keeps floating above it exactly like it already does over the hero. */
 
-.service-features { display: flex; flex-direction: column; margin-top: var(--sp-9); gap: var(--sp-9); }
+.services-pin { position: relative; }
+.services-pin__scroller { height: 300vh; }
+.services-pin__sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 10;
+  background: var(--ink-900);
+}
 
-.service-feature {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: var(--sp-8);
+.services-pin__bar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  z-index: 3;
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  padding: calc(var(--sp-9) + var(--sp-4)) var(--page-margin) 0;
+  color: var(--bone-50);
+  pointer-events: none;
 }
-.service-feature:nth-child(even) .service-feature__media { order: 2; }
-.service-feature:nth-child(even) .service-feature__body { order: 1; }
+.services-pin__counter { font-variant-numeric: tabular-nums; }
+.services-pin__counter [data-total]::before { content: "/ "; }
 
-.service-feature__media { overflow: hidden; }
-.service-feature__media img {
-  width: 100%; height: auto; display: block;
-  transition: transform 700ms var(--ease-standard);
+.services-pin__rail {
+  position: absolute;
+  right: var(--page-margin);
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
 }
-.service-feature:hover .service-feature__media img,
-.service-feature:focus-visible .service-feature__media img { transform: scale(1.03); }
+.services-pin__dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--ink-line-on-ink);
+  transition: background 200ms var(--ease-standard), transform 200ms var(--ease-standard);
+}
+.services-pin__dot.is-active { background: var(--bone-50); transform: scale(1.5); }
 
-.service-feature__body { display: flex; flex-direction: column; gap: var(--sp-4); }
-.service-feature__num { font-family: var(--font-mono); font-size: 1rem; letter-spacing: -.01em; color: var(--clay-500); }
-.service-feature__title { line-height: .96; }
-.service-feature__desc { font-size: 1.125rem; line-height: 1.55; color: var(--ink-meta-on-bone); max-width: 46ch; }
-.service-feature__link {
+.services-pin__panel {
+  position: absolute; inset: 0;
+  display: block;
+  opacity: 0;
+  transition: opacity 600ms var(--ease-standard);
+  pointer-events: none;
+}
+.services-pin__panel.is-active { opacity: 1; pointer-events: auto; }
+
+.services-pin__img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transform: scale(1.05);
+  transition: transform 6000ms linear;
+}
+.services-pin__panel.is-active .services-pin__img { transform: scale(1.14); }
+
+.services-pin__scrim {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(14,14,12,.82) 0%, rgba(14,14,12,.35) 42%, rgba(14,14,12,.08) 68%);
+}
+
+.services-pin__body {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  z-index: 2;
+  padding: 0 var(--page-margin) var(--sp-9);
+  max-width: var(--grid-max);
+  margin-inline: auto;
+  color: var(--bone-50);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  transform: translateY(10px);
+  opacity: 0;
+  transition: opacity 550ms var(--ease-standard) 80ms, transform 550ms var(--ease-standard) 80ms;
+}
+.services-pin__panel.is-active .services-pin__body { opacity: 1; transform: translateY(0); }
+
+.services-pin__num { font-family: var(--font-mono); font-size: 1rem; letter-spacing: .1em; color: var(--sand-300); }
+.services-pin__title { max-width: 14ch; }
+.services-pin__desc { font-size: 1.125rem; line-height: 1.5; max-width: 46ch; color: var(--ink-body-on-ink); }
+.services-pin__link {
   display: inline-flex; align-self: flex-start;
   font-family: var(--font-mono); font-size: .75rem; letter-spacing: var(--tracking-meta); text-transform: uppercase;
   padding-block: var(--sp-2); margin-top: var(--sp-2);
   border-bottom: 1px solid transparent;
   transition: border-color var(--motion-hover) var(--ease-standard);
 }
-.service-feature:hover .service-feature__link,
-.service-feature:focus-visible .service-feature__link { border-color: currentColor; }
-.service-feature:active { opacity: .85; }
+.services-pin__panel:hover .services-pin__link,
+.services-pin__panel:focus-visible .services-pin__link { border-color: currentColor; }
+.services-pin__panel:active .services-pin__body { opacity: .85; }
 
 @media (max-width: 860px) {
-  .service-feature { grid-template-columns: 1fr; }
-  .service-feature:nth-child(even) .service-feature__media,
-  .service-feature:nth-child(even) .service-feature__body { order: initial; }
+  /* Pinned scroll-hijacking gets janky against mobile browser chrome and touch
+     physics — degrade to a plain stacked sequence, still full-bleed and big. */
+  .services-pin__scroller { height: auto; }
+  .services-pin__sticky { position: static; height: auto; display: flex; flex-direction: column; }
+  .services-pin__bar, .services-pin__rail { display: none; }
+  .services-pin__panel {
+    position: relative; opacity: 1; pointer-events: auto;
+    height: 86vh; min-height: 520px;
+    border-top: 1px solid var(--ink-line-on-ink);
+  }
+  .services-pin__img { transform: scale(1); transition: none; }
+  .services-pin__body { transform: none; opacity: 1; padding-bottom: var(--sp-8); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .services-pin__img, .services-pin__panel.is-active .services-pin__img { transition: none; transform: scale(1); }
+}
+
+/* ---------- media row — generic photo + content pairing (Contact's facts row, etc.) ---------- */
+
+.media-row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--sp-8); align-items: center; }
+.media-row__media { overflow: hidden; }
+.media-row__media img { width: 100%; height: auto; display: block; transition: transform 700ms var(--ease-standard); }
+.media-row:hover .media-row__media img, .media-row:focus-within .media-row__media img { transform: scale(1.03); }
+.media-row__body { display: flex; flex-direction: column; gap: var(--sp-4); }
+
+@media (max-width: 860px) {
+  .media-row { grid-template-columns: 1fr; }
 }
 
 /* ---------- testimonials — honest empty state ---------- */
@@ -744,3 +848,50 @@
   .mosaic figure[tabindex] img { transition: opacity 200ms ease; }
   .mosaic figure[tabindex]:hover img, .mosaic figure[tabindex]:active img { transform: none; }
 }
+
+/* ---------- intro — fullscreen logo reveal, homepage entry, once per session ---------- */
+/* Page chrome, not a gesture surface: CSS-only, no bounce, same --ease-standard
+   as every other reveal on the site. Hidden by default (display:none) — the
+   inline head script only adds html.show-intro when sessionStorage confirms
+   this is a fresh session and prefers-reduced-motion is off, so a JS failure
+   or blocked storage degrades to "no intro" rather than a stuck black screen. */
+.intro { display: none; }
+html.show-intro .intro {
+  display: flex;
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  align-items: center;
+  justify-content: center;
+  background: var(--ink-900);
+  opacity: 1;
+  transition: opacity 550ms var(--ease-standard);
+}
+html.show-intro .intro.is-hiding { opacity: 0; }
+html.show-intro .intro.is-done { display: none; }
+
+.intro__mark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  opacity: 0;
+  transform: scale(.94);
+  transition: opacity 650ms var(--ease-standard), transform 650ms var(--ease-standard);
+}
+.intro.is-in .intro__mark { opacity: 1; transform: scale(1); }
+.intro__mark img { width: clamp(48px, 6vw, 84px); height: auto; }
+.intro__word {
+  font-family: var(--font-grotesk);
+  font-weight: 600;
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--bone-50);
+  font-size: clamp(1.25rem, 2.2vw, 1.9rem);
+}
+
+/* ---------- contact teaser (homepage) — mirrors the Services teaser-to-page pattern ---------- */
+.contact-teaser { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--sp-7); flex-wrap: wrap; }
+.contact-teaser__copy { max-width: 52ch; }
+.contact-teaser__actions { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-4); }

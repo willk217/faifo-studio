@@ -3,6 +3,12 @@
 # there's a compressed proxy). Keep the files locally; don't push them.
 assets/video/
 
+# Original personal-photo uploads (full-size, mixed-case names). Web-weight,
+# clean-named copies of what's actually used live in assets/photo/personal/ —
+# these originals are the source, kept locally, not needed by the deploy.
+assets/photo/Landscapes/
+assets/photo/Portraits/
+
 # OS cruft
 .DS_Store
 

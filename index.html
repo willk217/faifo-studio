@@ -18,8 +18,26 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <link rel="stylesheet" href="css/tokens.css">
 <link rel="stylesheet" href="css/base.css">
 <link rel="stylesheet" href="css/style.css">
+<script>
+  // Runs before paint: decides once whether the fullscreen intro plays this
+  // session. A blocked/unavailable sessionStorage or reduced-motion just
+  // skips it — the default (no class) state is "no intro", never a stuck cover.
+  try {
+    if (!sessionStorage.getItem('faifo-intro-seen') && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('show-intro');
+      sessionStorage.setItem('faifo-intro-seen', '1');
+    }
+  } catch (e) {}
+</script>
 </head>
 <body>
+
+<div class="intro" id="intro" aria-hidden="true">
+  <div class="intro__mark">
+    <img src="assets/logo/mark-nav.png" width="1024" height="1024" alt="">
+    <span class="intro__word">Faifo Studio</span>
+  </div>
+</div>
 
 <a class="skip-link" href="#main">Skip to content</a>
 
@@ -32,7 +50,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <nav class="nav__links" aria-label="Primary">
       <a href="#services">Services</a>
       <a href="#process">How it works</a>
-      <a class="is-cta" href="#contact">Start a project →</a>
+      <a class="is-cta" href="contact.html">Start a project →</a>
     </nav>
     <button class="nav__toggle" id="navToggle" aria-label="Open menu" aria-expanded="false" aria-controls="navPanel">
       <svg viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1 4h14M1 8h14M1 12h14" stroke="currentColor" stroke-width="1.3"/></svg>
@@ -50,7 +68,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
   <nav class="nav-panel__links" aria-label="Mobile">
     <a href="#services">Services</a>
     <a href="#process">How it works</a>
-    <a href="#contact">Contact</a>
+    <a href="contact.html">Contact</a>
   </nav>
   <span class="meta-sm" style="color:var(--ink-meta-on-ink)">Hoi An, Vietnam · hello@faifostudio.com</span>
 </div>
@@ -59,21 +77,17 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
   <!-- Hero -->
   <section class="hero on-ink" id="top" aria-label="Introduction">
-    <div class="hero__trail" aria-hidden="true"></div>
     <div class="hero__content">
       <div class="hero__top meta">
         <span>Faifo Studio</span>
         <span>Hoi An, Vietnam</span>
       </div>
       <div class="hero__body">
-        <div>
-          <h1 class="h-display">Creative<br>media for<br>brands.</h1>
-          <div class="hero__ctas">
-            <a class="btn" href="#services">See what we do →</a>
-            <a class="btn" href="#contact">Start a project →</a>
-          </div>
+        <h1 class="h-display">Creative media for brands and spaces</h1>
+        <div class="hero__ctas">
+          <a class="btn" href="#services">See what we do →</a>
+          <a class="btn" href="contact.html">Start a project →</a>
         </div>
-        <p class="lead hero__lead">We shoot, film, and design the way people see your property, your brand, and your business. Photography, cinematography, and brand identity, made by a studio based in Hoi An.</p>
       </div>
     </div>
     <div class="hero__scroll meta-sm">
@@ -83,61 +97,72 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     </div>
   </section>
 
-  <!-- 01 — Services -->
-  <section class="section on-bone" id="services" aria-label="Services">
+  <!-- 01 — Statement -->
+  <section class="statement on-bone" id="statement" aria-label="What we believe">
     <div class="wrap">
       <div class="meta-bar">
-        <span>01 — Services</span>
+        <span>01 — What we believe</span>
         <span>Photography · Cinematography · Brand identity</span>
       </div>
-      <div class="section-head reveal">
-        <h2 class="h-section">What we do</h2>
-        <p class="body-text" style="color:var(--ink-meta-on-bone)">Three things, done properly. Not a menu of everything, just the work we're actually good at.</p>
-      </div>
+      <p class="statement__text" id="statementText"><span class="word">We</span> <span class="word">shoot,</span> <span class="word">film,</span> <span class="word">and</span> <span class="word">design</span> <span class="word">media</span> <span class="word">that</span> <span class="word">actually</span> <span class="word">makes</span> <span class="word">an</span> <span class="word">impact</span> <span class="word">on</span> <span class="word">your</span> <span class="word">business.</span> <span class="word">Far</span> <span class="word">too</span> <span class="word">often</span> <span class="word">do</span> <span class="word">we</span> <span class="word">see</span> <span class="word">incredible</span> <span class="word">projects</span> <span class="word">settle</span> <span class="word">for</span> <span class="word">mediocre</span> <span class="word">branding</span> <span class="word">and</span> <span class="word">visuals.</span></p>
+    </div>
+  </section>
 
-      <div class="service-features">
-        <a class="service-feature reveal" href="photography.html">
-          <div class="service-feature__media">
-            <img src="assets/photo/auko/lodge-canopy-01.jpg" width="2500" height="1667" alt="Canopy lodge interior, timber-panelled bed with warm lamplight" loading="lazy">
-          </div>
-          <div class="service-feature__body">
-            <span class="service-feature__num">01</span>
-            <h3 class="h-section service-feature__title">Photography</h3>
-            <p class="service-feature__desc">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be. Ground level or aerial, whatever the property needs.</p>
-            <span class="service-feature__link">Learn more →</span>
+  <!-- 02 — Services -->
+  <section class="services-pin on-ink" id="services" aria-label="Services">
+    <div class="services-pin__scroller">
+      <div class="services-pin__sticky">
+        <div class="services-pin__bar meta">
+          <span>02 — Services</span>
+          <span class="services-pin__counter"><span data-current>01</span><span data-total>03</span></span>
+        </div>
+        <div class="services-pin__rail">
+          <span class="services-pin__dot is-active"></span>
+          <span class="services-pin__dot"></span>
+          <span class="services-pin__dot"></span>
+        </div>
+
+        <a class="services-pin__panel is-active" href="photography.html">
+          <img class="services-pin__img" src="assets/photo/auko/lodge-canopy-01.jpg" alt="Canopy lodge interior, timber-panelled bed with warm lamplight">
+          <div class="services-pin__scrim" aria-hidden="true"></div>
+          <div class="services-pin__body">
+            <span class="services-pin__num">01 / Photography</span>
+            <h3 class="h-display services-pin__title">Photography</h3>
+            <p class="services-pin__desc">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be.</p>
+            <span class="services-pin__link">Learn more →</span>
           </div>
         </a>
-        <a class="service-feature reveal" href="cinematography.html">
-          <div class="service-feature__media">
-            <img src="assets/photo/auko/overview-02-dusk.jpg" width="2500" height="1875" alt="The lodges lit warm at dusk against the dark cliff face" loading="lazy">
-          </div>
-          <div class="service-feature__body">
-            <span class="service-feature__num">02</span>
-            <h3 class="h-section service-feature__title">Cinematography</h3>
-            <p class="service-feature__desc">Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.</p>
-            <span class="service-feature__link">Learn more →</span>
+
+        <a class="services-pin__panel" href="cinematography.html">
+          <img class="services-pin__img" src="assets/photo/auko/overview-02-dusk.jpg" alt="The lodges lit warm at dusk against the dark cliff face">
+          <div class="services-pin__scrim" aria-hidden="true"></div>
+          <div class="services-pin__body">
+            <span class="services-pin__num">02 / Cinematography</span>
+            <h3 class="h-display services-pin__title">Cinematography</h3>
+            <p class="services-pin__desc">Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.</p>
+            <span class="services-pin__link">Learn more →</span>
           </div>
         </a>
-        <a class="service-feature reveal" href="brand-identity.html">
-          <div class="service-feature__media">
-            <img src="assets/photo/auko/welcome-01.jpg" width="2500" height="1667" alt="The welcome pavilion, bamboo structure with mountain views" loading="lazy">
-          </div>
-          <div class="service-feature__body">
-            <span class="service-feature__num">03</span>
-            <h3 class="h-section service-feature__title">Brand identity</h3>
-            <p class="service-feature__desc">Logos, visual identity, and the guidelines that keep a brand looking like itself, plus the content that follows once the system exists.</p>
-            <span class="service-feature__link">Learn more →</span>
+
+        <a class="services-pin__panel" href="brand-identity.html">
+          <img class="services-pin__img" src="assets/photo/personal/mountain-window.jpg" alt="A mountain framed through a window opening, warm afternoon light">
+          <div class="services-pin__scrim" aria-hidden="true"></div>
+          <div class="services-pin__body">
+            <span class="services-pin__num">03 / Brand identity</span>
+            <h3 class="h-display services-pin__title">Brand identity</h3>
+            <p class="services-pin__desc">Logos, visual identity, and the guidelines that keep a brand looking like itself.</p>
+            <span class="services-pin__link">Learn more →</span>
           </div>
         </a>
       </div>
     </div>
   </section>
 
-  <!-- 02 — How we work -->
+  <!-- 03 — How we work -->
   <section class="section on-ink hairline-top" id="process" aria-label="How we work">
     <div class="wrap">
       <div class="meta-bar">
-        <span>02 — How we work</span>
+        <span>03 — How we work</span>
         <span>Talk · Shoot · Edit · Stay</span>
       </div>
       <div class="section-head reveal">
@@ -177,49 +202,23 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     </div>
   </section>
 
-  <!-- 03 — Contact -->
+  <!-- 04 — Contact -->
   <section class="section on-bone" id="contact" aria-label="Contact">
     <div class="wrap">
       <div class="meta-bar">
-        <span>03 — Contact</span>
+        <span>04 — Contact</span>
         <span>hello@faifostudio.com</span>
       </div>
 
-      <div class="enquire__row reveal">
-        <div class="enquire__copy">
+      <div class="contact-teaser reveal">
+        <div class="contact-teaser__copy">
           <h2 class="h-section">Start a project</h2>
-          <p class="body-text" style="color:var(--ink-meta-on-bone)">Tell us what you're working on. Property, brand, campaign, ongoing content, whatever it is.</p>
+          <p class="body-text" style="color:var(--ink-meta-on-bone); margin-top: var(--sp-4);">Tell us what you're working on. Property, brand, campaign, ongoing content, whatever it is.</p>
+        </div>
+        <div class="contact-teaser__actions">
+          <a class="btn is-primary" href="contact.html">Start a project →</a>
           <p class="meta-sm" style="color:var(--ink-meta-on-bone)">Prefer email? <a href="mailto:hello@faifostudio.com" style="text-decoration:underline">hello@faifostudio.com</a></p>
         </div>
-
-        <form id="enquireForm" class="enquire__form" novalidate>
-          <div class="grid-12" style="gap:var(--sp-5); margin-bottom: var(--sp-5);">
-            <div class="field" style="grid-column: span 6;">
-              <label for="f-name">Name</label>
-              <input id="f-name" name="name" type="text" required autocomplete="name" placeholder="Your name">
-            </div>
-            <div class="field" style="grid-column: span 6;">
-              <label for="f-email">Email</label>
-              <input id="f-email" name="email" type="email" required autocomplete="email" spellcheck="false" placeholder="you@company.com">
-            </div>
-            <div class="field" style="grid-column: span 12;">
-              <label for="f-type">Project type</label>
-              <select id="f-type" name="projectType">
-                <option value="">Select one</option>
-                <option>Photography</option>
-                <option>Cinematography</option>
-                <option>Brand identity</option>
-                <option>Something else</option>
-              </select>
-            </div>
-            <div class="field" style="grid-column: span 12;">
-              <label for="f-message">Message</label>
-              <textarea id="f-message" name="message" required placeholder="Tell us about the space or brand"></textarea>
-            </div>
-          </div>
-          <button class="btn is-primary" type="submit">Send it →</button>
-          <p class="form-note" id="formStatus" role="status" aria-live="polite" style="margin-top:var(--sp-4)">Opens in your mail app, addressed to hello@faifostudio.com.</p>
-        </form>
       </div>
     </div>
   </section>
@@ -236,7 +235,7 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <nav class="footer__nav meta-sm" style="display:flex; gap:var(--sp-6); margin-bottom:var(--sp-6)" aria-label="Footer">
       <a href="#services">Services</a>
       <a href="#process">How it works</a>
-      <a href="#contact">Contact</a>
+      <a href="contact.html">Contact</a>
     </nav>
     <div class="footer__row meta">
       <span>Hoi An, Vietnam · 16°03′N 108°20′E</span>

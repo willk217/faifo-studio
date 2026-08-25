@@ -5,6 +5,28 @@
   // somewhere in the document — otherwise press feedback never renders on tap.
   document.addEventListener('touchstart', () => {}, { passive: true });
 
+  // Fullscreen intro — mark fades/scales in, holds, then the ink curtain lifts.
+  // html.show-intro is only present when the inline head script (index.html)
+  // confirmed a fresh session and motion is allowed, so this just plays the
+  // sequence; it never decides whether to.
+  const intro = document.getElementById('intro');
+  if (intro && document.documentElement.classList.contains('show-intro')) {
+    document.body.style.overflow = 'hidden';
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => intro.classList.add('is-in'));
+    });
+    setTimeout(() => {
+      intro.classList.add('is-hiding');
+      document.body.style.overflow = '';
+      intro.addEventListener('transitionend', function done(e) {
+        if (e.propertyName !== 'opacity') return;
+        intro.removeEventListener('transitionend', done);
+        intro.classList.add('is-done');
+      });
+      setTimeout(() => intro.classList.add('is-done'), 700); // fallback if transitionend never fires
+    }, 1500);
+  }
+
   // Mobile nav
   const toggle = document.getElementById('navToggle');
   const closeBtn = document.getElementById('navClose');
@@ -78,75 +100,87 @@
     status.textContent = 'Opening your mail app, addressed to hello@faifostudio.com.';
   });
 
-  // Hero mouse trail — real Auko frames pop up near the cursor and fade out,
-  // leaving a trail. Fine-pointer + motion-OK only; touch/reduced-motion get
-  // the plain ink ground with nothing extra.
-  const hero = document.getElementById('top');
-  const trail = hero?.querySelector('.hero__trail');
-  const canTrail = hero && trail
-    && window.matchMedia('(hover: hover) and (pointer: fine)').matches
-    && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // Statement — words brighten as the section scrolls through the viewport,
+  // cascading rather than all lighting at once. Reduced-motion (and any
+  // browser without matchMedia support failing the check) skips the JS
+  // entirely; the CSS default is already fully lit, so that's a complete,
+  // readable statement on its own, not a degraded state.
+  const statementEl = document.getElementById('statementText');
+  if (statementEl && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const words = Array.from(statementEl.querySelectorAll('.word'));
+    let stTop = 0, stHeight = 0, stTicking = false;
 
-  if (canTrail) {
-    const images = [
-      'overview-01-aerial-day.jpg', 'overview-02-dusk.jpg', 'land-01.jpg', 'land-02.jpg',
-      'lodge-ground-01.jpg', 'lodge-canopy-01.jpg', 'lodge-earth-01.jpg', 'lodge-river-01.jpg',
-      'welcome-01.jpg', 'wellness-01.jpg', 'lifestyle-01.jpg', 'lifestyle-03.jpg',
-    ].map(f => `assets/photo/auko/${f}`);
-
-    const MIN_DIST = 110;
-    const MAX_LIVE = 5;
-    const HOLD_MS = 550;
-    const live = [];
-    let lastX = null, lastY = null, lastSrc = null;
-
-    function spawn(x, y) {
-      let src = images[Math.floor(Math.random() * images.length)];
-      if (src === lastSrc) src = images[(images.indexOf(src) + 1) % images.length];
-      lastSrc = src;
-
-      const img = document.createElement('img');
-      img.className = 'hero__trail-img';
-      img.src = src;
-      img.alt = '';
-      img.style.left = x + 'px';
-      img.style.top = y + 'px';
-      trail.appendChild(img);
-      live.push(img);
-      requestAnimationFrame(() => img.classList.add('is-in'));
-
-      if (live.length > MAX_LIVE) retire(live[0]);
-      setTimeout(() => retire(img), HOLD_MS);
+    function measureStatement() {
+      const rect = statementEl.closest('.statement').getBoundingClientRect();
+      stTop = rect.top + window.scrollY;
+      stHeight = rect.height;
     }
 
-    function retire(img) {
-      if (!img.isConnected || img.classList.contains('is-out')) return;
-      const i = live.indexOf(img);
-      if (i !== -1) live.splice(i, 1);
-      img.classList.remove('is-in');
-      img.classList.add('is-out');
-      img.addEventListener('transitionend', () => img.remove(), { once: true });
-      setTimeout(() => img.remove(), 700); // fallback if transitionend never fires
+    function updateStatement() {
+      stTicking = false;
+      const vh = window.innerHeight;
+      // Tight, viewport-relative range (not tied to section height, which
+      // varies with word count/wrap) — the whole cascade resolves within
+      // well under one screen of scrolling instead of dragging across two.
+      const start = stTop - vh * 0.62;
+      const end = stTop + vh * 0.05;
+      const progress = Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)));
+      const n = words.length;
+      const windowSize = (1 / n) * 1.5;
+      words.forEach((w, i) => {
+        const t = i / (n - 1);
+        const raw = (progress - t) / windowSize + 0.5;
+        const lit = Math.min(1, Math.max(0, raw));
+        w.style.opacity = String(0.2 + lit * 0.8);
+        w.style.filter = `blur(${(1 - lit) * 5}px)`;
+        w.style.transform = `translateY(${(1 - lit) * 10}px)`;
+      });
     }
 
-    // Cached, not read on every pointermove — a forced layout read that often
-    // would jank the very effect it's positioning. Refreshed on enter/resize.
-    let heroRect = null;
-    const refreshRect = () => { heroRect = hero.getBoundingClientRect(); };
-    hero.addEventListener('pointerenter', refreshRect);
-    window.addEventListener('resize', refreshRect, { passive: true });
+    measureStatement();
+    updateStatement();
+    window.addEventListener('scroll', () => {
+      if (!stTicking) { stTicking = true; requestAnimationFrame(updateStatement); }
+    }, { passive: true });
+    window.addEventListener('resize', () => { measureStatement(); updateStatement(); }, { passive: true });
+  }
 
-    hero.addEventListener('pointermove', (e) => {
-      if (e.pointerType !== 'mouse') return;
-      if (!heroRect) refreshRect();
-      const x = e.clientX - heroRect.left;
-      const y = e.clientY - heroRect.top;
-      if (lastX !== null && Math.hypot(x - lastX, y - lastY) < MIN_DIST) return;
-      lastX = x; lastY = y;
-      spawn(x, y);
-    });
+  // Services pin — scroll position through the 300vh scroller drives which of
+  // the three full-viewport panels is active. Only wired above the mobile
+  // breakpoint; below it CSS forces every panel to a plain stacked, always-
+  // visible sequence, so nothing here needs to run (or matter) on touch.
+  const servicesPin = document.querySelector('.services-pin');
+  if (servicesPin && window.matchMedia('(min-width: 861px)').matches) {
+    const scroller = servicesPin.querySelector('.services-pin__scroller');
+    const panels = Array.from(servicesPin.querySelectorAll('.services-pin__panel'));
+    const dots = Array.from(servicesPin.querySelectorAll('.services-pin__dot'));
+    const counter = servicesPin.querySelector('[data-current]');
 
-    hero.addEventListener('pointerleave', () => { lastX = lastY = null; });
+    // Cached on load/resize, not read on every scroll tick — same reasoning
+    // as the hero trail's cached rect above.
+    let scrollerTop = 0, scrollerHeight = 0, ticking = false;
+    function measure() {
+      const rect = scroller.getBoundingClientRect();
+      scrollerTop = rect.top + window.scrollY;
+      scrollerHeight = rect.height;
+    }
+
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (window.scrollY - scrollerTop) / (scrollerHeight - vh)));
+      const index = Math.min(panels.length - 1, Math.floor(progress * panels.length));
+      panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
+      dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
+      if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+    }
+
+    measure();
+    update();
+    window.addEventListener('scroll', () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', () => { measure(); update(); }, { passive: true });
   }
 
   // FAQ accordion — plain button + region, not native <details>, so the
