@@ -480,7 +480,12 @@
 
 .services-pin__scrim {
   position: absolute; inset: 0;
-  background: linear-gradient(to top, rgba(14,14,12,.82) 0%, rgba(14,14,12,.35) 42%, rgba(14,14,12,.08) 68%);
+  /* Stops tuned to the caption's own footprint (num+title+desc sit within
+     ~0-30% of viewport height, measured off .services-pin__body), not
+     picked by eye against one calm frame — busier/brighter footage (the
+     cinematography panel's video) needs the same guaranteed contrast the
+     static photos get. */
+  background: linear-gradient(to top, rgba(14,14,12,.90) 0%, rgba(14,14,12,.6) 30%, rgba(14,14,12,.22) 55%, rgba(14,14,12,0) 78%);
 }
 
 /* Captions are pinned to the sticky viewport, not the sliding track — a
