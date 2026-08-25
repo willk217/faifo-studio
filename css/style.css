@@ -677,7 +677,7 @@
    nav keeps floating above it exactly like it already does over the hero. */
 
 .services-pin { position: relative; }
-.services-pin__scroller { height: 300vh; }
+.services-pin__scroller { height: 190vh; }
 .services-pin__sticky {
   position: sticky;
   top: 0;

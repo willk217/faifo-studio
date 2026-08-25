@@ -127,8 +127,13 @@
       const progress = Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)));
       const n = words.length;
       const windowSize = (1 / n) * 1.5;
+      // t is remapped inside [windowSize/2, 1-windowSize/2] rather than the
+      // raw [0,1] index spread — otherwise the first/last words' transition
+      // midpoints land exactly on progress's own clamped boundaries, so they
+      // can only ever reach "raw" 0.5 (half lit) instead of 0 or 1. That was
+      // the bug behind the last word ("visuals.") never fully unblurring.
       words.forEach((w, i) => {
-        const t = i / (n - 1);
+        const t = windowSize / 2 + (i / (n - 1)) * (1 - windowSize);
         const raw = (progress - t) / windowSize + 0.5;
         const lit = Math.min(1, Math.max(0, raw));
         w.style.opacity = String(0.2 + lit * 0.8);
@@ -145,7 +150,7 @@
     window.addEventListener('resize', () => { measureStatement(); updateStatement(); }, { passive: true });
   }
 
-  // Services pin — scroll position through the 300vh scroller drives which of
+  // Services pin — scroll position through the 190vh scroller drives which of
   // the three full-viewport panels is active. Only wired above the mobile
   // breakpoint; below it CSS forces every panel to a plain stacked, always-
   // visible sequence, so nothing here needs to run (or matter) on touch.
