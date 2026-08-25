@@ -161,6 +161,14 @@
     const dots = Array.from(servicesPin.querySelectorAll('.services-pin__dot'));
     const counter = servicesPin.querySelector('[data-current]');
 
+    // Cinematography panel's video background — lazy: nothing downloads
+    // (preload="none") until this panel is actually reached, and only once,
+    // matching the hero storytelling reel's own desktop + motion-OK gate.
+    // Reduced-motion visitors just see the poster frame, same as mobile.
+    const filmBg = document.getElementById('servicesFilmBg');
+    const canPlayBg = filmBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let bgStarted = false;
+
     // Cached on load/resize, not read on every scroll tick — same reasoning
     // as the hero trail's cached rect above.
     let scrollerTop = 0, scrollerHeight = 0, ticking = false;
@@ -178,6 +186,10 @@
       panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
       dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
       if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+      if (canPlayBg && index === 1 && !bgStarted) {
+        bgStarted = true;
+        filmBg.play().catch(() => {}); // autoplay can still be blocked; poster stays visible either way
+      }
     }
 
     measure();
