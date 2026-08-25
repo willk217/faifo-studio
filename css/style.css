@@ -105,27 +105,16 @@
 /* Anchor targets land clear of the sticky nav instead of flush under it */
 [id] { scroll-margin-top: 88px; }
 
-/* ---------- nav ---------- */
+/* ---------- nav — minimal floating mark + burger, not a bar ---------- */
+/* Two independent frosted circles rather than a full-width bar: legible over
+   any ground (ink, bone, or the Services panels' own photography/video)
+   without claiming a strip of the page the way a sticky bar would. */
 
 .nav {
-  position: sticky;
-  top: 0;
+  position: fixed;
+  top: 0; left: 0; right: 0;
   z-index: 40;
-  background: rgba(14, 14, 12, .74);
-  backdrop-filter: blur(20px) saturate(160%);
-  -webkit-backdrop-filter: blur(20px) saturate(160%);
-  color: var(--bone-50);
-  border-top: 1px solid rgba(250, 248, 244, .16);
-}
-.nav::after {
-  content: "";
-  position: absolute; left: 0; right: 0; top: 100%; height: 14px;
-  background: linear-gradient(to bottom, rgba(14, 14, 12, .28), transparent);
   pointer-events: none;
-}
-@media (prefers-reduced-transparency: reduce) {
-  .nav { background: var(--ink-900); backdrop-filter: none; -webkit-backdrop-filter: none; border-top-color: transparent; border-bottom: 1px solid var(--ink-line-on-ink); }
-  .nav::after { display: none; }
 }
 
 .nav__row {
@@ -134,37 +123,28 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--sp-4) var(--page-margin);
+  padding: var(--sp-5) var(--page-margin);
 }
 
-.nav__brand { display: flex; align-items: center; gap: var(--sp-3); }
-.nav__brand img { width: 22px; height: 22px; }
-.nav__brand span {
-  font-family: var(--font-grotesk);
-  font-weight: 600;
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -.02em;
-  text-transform: uppercase;
-  font-size: 1.0625rem;
+/* Scoped to .nav specifically — .nav-panel reuses the .nav__brand class for
+   its own, differently-shaped logo+wordmark header and must not inherit
+   this circular icon-button treatment. */
+.nav .nav__brand, .nav__toggle {
+  pointer-events: auto;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(14, 14, 12, .4);
+  backdrop-filter: blur(14px) saturate(160%);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  border: 1px solid rgba(250, 248, 244, .18);
+  color: var(--bone-50);
+}
+@media (prefers-reduced-transparency: reduce) {
+  .nav .nav__brand, .nav__toggle { background: var(--ink-900); backdrop-filter: none; -webkit-backdrop-filter: none; }
 }
 
-.nav__links { display: flex; align-items: center; gap: var(--sp-6); }
-.nav__links a {
-  font-family: var(--font-mono);
-  font-size: .75rem;
-  letter-spacing: var(--tracking-meta);
-  text-transform: uppercase;
-  color: var(--ink-meta-on-ink);
-  padding-block: var(--sp-2);
-  border-bottom: 1px solid transparent;
-  display: inline-block;
-  transition: color var(--motion-hover) var(--ease-standard), border-color var(--motion-hover) var(--ease-standard), transform 100ms ease-out;
-}
-.nav__links a:hover, .nav__links a:focus-visible { color: var(--bone-50); border-color: var(--bone-50); }
-.nav__links a:active { transform: scale(.96); transition-duration: 80ms; }
-.nav__links a.is-cta { color: var(--bone-50); }
-
-.nav__toggle { display: none; }
+.nav .nav__brand img { width: 18px; height: 18px; }
 
 /* Instant press feedback — respond on the down-stroke, not on release */
 .nav__toggle, .nav-panel__close, .nav__brand, .back-top {
@@ -173,6 +153,22 @@
 .nav__toggle:active, .nav-panel__close:active, .nav__brand:active, .back-top:active {
   transform: scale(.94);
 }
+
+/* Hamburger-to-X morph — three independent bars, not an icon swap */
+.nav__toggle { position: relative; }
+.nav__toggle-line {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 16px; height: 1.3px;
+  background: currentColor;
+  transform: translate(-50%, -50%);
+  transition: transform 320ms var(--ease-standard), opacity 320ms var(--ease-standard);
+}
+.nav__toggle-line--top { transform: translate(-50%, calc(-50% - 5px)); }
+.nav__toggle-line--bottom { transform: translate(-50%, calc(-50% + 5px)); }
+.nav__toggle[aria-expanded="true"] .nav__toggle-line--top { transform: translate(-50%, -50%) rotate(45deg); }
+.nav__toggle[aria-expanded="true"] .nav__toggle-line--mid { opacity: 0; }
+.nav__toggle[aria-expanded="true"] .nav__toggle-line--bottom { transform: translate(-50%, -50%) rotate(-45deg); }
 
 /* ---------- buttons / tags ---------- */
 
@@ -337,13 +333,6 @@
 }
 
 @media (max-width: 860px) {
-  .nav__links { display: none; }
-  .nav__toggle {
-    display: flex; align-items: center; justify-content: center;
-    width: 40px; height: 40px; border: 1px solid var(--ink-line-on-ink);
-  }
-  .nav__toggle svg { width: 16px; height: 16px; }
-
   .doctrine { grid-template-columns: 1fr; }
 
   .enquire__row { grid-template-columns: 1fr; }
@@ -365,6 +354,18 @@
 }
 .nav-panel.is-open { transform: translateY(0) scale(1); opacity: 1; }
 .nav-panel .nav__row { max-width: none; margin-inline: 0; }
+.nav-panel .nav__brand {
+  display: flex; align-items: center; gap: var(--sp-3);
+}
+.nav-panel .nav__brand img { width: 22px; height: 22px; }
+.nav-panel .nav__brand span {
+  font-family: var(--font-grotesk);
+  font-weight: 600;
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: -.02em;
+  text-transform: uppercase;
+  font-size: 1.0625rem;
+}
 .nav-panel__links { display: flex; flex-direction: column; gap: var(--sp-6); margin-top: var(--sp-9); }
 .nav-panel__links a { font-family: var(--font-grotesk); font-weight: 600; font-variation-settings: 'wdth' 112; text-transform: uppercase; font-size: 2rem; letter-spacing: -.03em; }
 .nav-panel__close { align-self: flex-end; width: 40px; height: 40px; border: 1px solid var(--ink-line-on-ink); display: flex; align-items: center; justify-content: center; }

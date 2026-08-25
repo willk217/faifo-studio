@@ -179,14 +179,18 @@
       scrollerHeight = rect.height;
     }
 
-    function update() {
-      ticking = false;
-      const vh = window.innerHeight;
-      const progress = Math.min(1, Math.max(0, (window.scrollY - scrollerTop) / (scrollerHeight - vh)));
-      // Track slides continuously with scroll (the "scroll left" motion);
-      // is-active is still a discrete nearest-panel pick, driving which
-      // panel's title/description is visible and which image gets the zoom.
-      track.style.transform = `translateX(-${progress * (panels.length - 1) * 100}vw)`;
+    // The track's position is damped, not snapped straight to scroll —
+    // targetX updates instantly on every scroll tick, currentX eases toward
+    // it every frame. A raw 1:1 scroll->transform coupling reads as jerky
+    // against real (often discrete, wheel-notch) scroll input; this is the
+    // same "follow, don't teleport" principle the gallery lightbox's spring
+    // physics used before that page was retired — critically damped, no
+    // overshoot, so it stays within the site's "no bounce for chrome" rule
+    // while still feeling like it has real inertia.
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    let targetX = 0, currentX = 0, rafRunning = false;
+
+    function applyDiscreteState(progress) {
       const index = Math.min(panels.length - 1, Math.round(progress * (panels.length - 1)));
       panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
       dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
@@ -194,6 +198,34 @@
       if (canPlayBg && index === 1 && !bgStarted) {
         bgStarted = true;
         filmBg.play().catch(() => {}); // autoplay can still be blocked; poster stays visible either way
+      }
+    }
+
+    function damp() {
+      const delta = targetX - currentX;
+      if (Math.abs(delta) < 0.05) {
+        currentX = targetX;
+        track.style.transform = `translateX(-${currentX}vw)`;
+        rafRunning = false;
+        return;
+      }
+      currentX += delta * 0.14;
+      track.style.transform = `translateX(-${currentX}vw)`;
+      requestAnimationFrame(damp);
+    }
+
+    function update() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const progress = Math.min(1, Math.max(0, (window.scrollY - scrollerTop) / (scrollerHeight - vh)));
+      targetX = progress * (panels.length - 1) * 100;
+      applyDiscreteState(progress);
+      if (reduceMotion) {
+        currentX = targetX;
+        track.style.transform = `translateX(-${currentX}vw)`;
+      } else if (!rafRunning) {
+        rafRunning = true;
+        requestAnimationFrame(damp);
       }
     }
 
