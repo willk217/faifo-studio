@@ -63,17 +63,6 @@
   text-transform: uppercase;
 }
 
-.blockquote-stat {
-  font-family: var(--font-grotesk);
-  font-weight: 600;
-  font-variation-settings: 'wdth' 112;
-  letter-spacing: -.035em;
-  line-height: 1.05;
-  text-transform: uppercase;
-  font-size: clamp(1.9rem, 3vw + 1rem, 4rem);
-  max-width: 24ch;
-}
-
 /* ---------- grounds ---------- */
 
 .on-ink { background: var(--ink-900); color: var(--bone-50); }
@@ -297,61 +286,15 @@
 
 .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--sp-8); flex-wrap: wrap; margin-bottom: var(--sp-8); }
 
-/* ---------- studio ---------- */
-
-.studio__row { display: flex; gap: var(--sp-9); align-items: flex-start; flex-wrap: wrap; }
-.studio__col { flex: 1; min-width: 260px; }
-
 .doctrine { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--sp-7); margin-top: var(--sp-8); }
 .doctrine > * { min-width: 0; }
 .doctrine__item { display: flex; flex-direction: column; gap: var(--sp-3); padding-top: var(--sp-5); border-top: 1px solid var(--ink-line-on-ink); }
 .on-bone .doctrine__item { border-top-color: var(--ink-line-on-bone); }
 .doctrine__item span:last-child { font-size: 1.125rem; letter-spacing: -.01em; }
 
-/* ---------- case study (Auko) ---------- */
-
-.case-intro { display: flex; gap: var(--sp-9); flex-wrap: wrap; margin-bottom: var(--sp-8); }
-.case-intro__col { flex: 1; min-width: 260px; }
-
-.case-facts { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--sp-6); margin-top: var(--sp-7); }
-.case-facts > * { min-width: 0; }
-.case-facts .fact { display: flex; flex-direction: column; gap: var(--sp-2); padding-top: var(--sp-4); border-top: 1px solid var(--ink-line-on-bone); }
-.case-facts .fact strong { font-size: 1.25rem; letter-spacing: -.01em; font-weight: 500; }
-
-/* Masonry, not a grid of forced crops — every image keeps its own native aspect
-   ratio (no aspect-ratio box, no object-fit:cover), so nothing is ever cropped.
-   CSS columns pack the set tightly, which is also what makes it read as one
-   concise gallery instead of four padded sub-sections. */
-.mosaic {
-  column-count: 3;
-  column-gap: var(--sp-4);
-  margin-top: var(--sp-8);
-}
-.mosaic figure {
-  position: relative;
-  margin: 0 0 var(--sp-4);
-  break-inside: avoid;
-  -webkit-column-break-inside: avoid;
-}
-.mosaic img {
-  width: 100%;
-  height: auto;
-  display: block;
-  transition: transform 500ms var(--ease-standard), filter 500ms var(--ease-standard);
-}
-.mosaic figcaption {
-  /* kept in the DOM (the lightbox reads its text) but not shown on the tile itself —
-     a caption on every thumbnail is exactly the clutter a concise gallery avoids */
-  position: absolute; width: 1px; height: 1px; overflow: hidden;
-  clip: rect(0 0 0 0); white-space: nowrap;
-}
-
-.case-group { margin-top: var(--sp-9); }
-.case-group__head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--sp-5); }
-
 /* ---------- enquire ---------- */
 
-.enquire__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--sp-9); align-items: start; }
+.enquire__row { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--sp-9); align-items: center; }
 .enquire__copy { display: flex; flex-direction: column; gap: var(--sp-5); padding-top: var(--sp-2); }
 .enquire__form { display: flex; flex-direction: column; }
 
@@ -391,7 +334,6 @@
 
 @media (max-width: 1024px) {
   .doctrine { grid-template-columns: 1fr 1fr; }
-  .mosaic { column-count: 2; }
 }
 
 @media (max-width: 860px) {
@@ -402,15 +344,12 @@
   }
   .nav__toggle svg { width: 16px; height: 16px; }
 
-  .studio__row { gap: var(--sp-7); }
   .doctrine { grid-template-columns: 1fr; }
 
   .enquire__row { grid-template-columns: 1fr; }
 
   .h-display { font-size: clamp(2.4rem, 9vw, 3.6rem); }
 
-  .case-facts { grid-template-columns: 1fr 1fr; }
-  .mosaic { column-count: 1; }
   .hero__top { flex-direction: column; gap: var(--sp-2); }
 }
 
@@ -429,153 +368,6 @@
 .nav-panel__links { display: flex; flex-direction: column; gap: var(--sp-6); margin-top: var(--sp-9); }
 .nav-panel__links a { font-family: var(--font-grotesk); font-weight: 600; font-variation-settings: 'wdth' 112; text-transform: uppercase; font-size: 2rem; letter-spacing: -.03em; }
 .nav-panel__close { align-self: flex-end; width: 40px; height: 40px; border: 1px solid var(--ink-line-on-ink); display: flex; align-items: center; justify-content: center; }
-
-/* ---------- gallery items (mosaic figures made interactive) ---------- */
-
-.mosaic figure[tabindex] { cursor: pointer; }
-.mosaic figure[tabindex] img { transition: transform 900ms var(--ease-standard); }
-.mosaic figure[tabindex]:hover img,
-.mosaic figure[tabindex]:focus-visible img { transform: scale(1.02); }
-.mosaic figure[tabindex]:active img { transform: scale(1.01); transition-duration: 100ms; }
-.mosaic figure[tabindex]:focus-visible { outline: 2px solid var(--ink-900); outline-offset: 2px; }
-
-/* ---------- filmstrip gallery — wheel-driven horizontal scroll, real photos ---------- */
-/* Bleeds past .wrap's max-width to the section's own edges — a wider, more
-   cinematic frame than the centered content column. Native overflow-x is the
-   accessible baseline (touch, trackpad, keyboard all just work); js/main.js
-   only adds a wheel->horizontal translation and a cursor-follow cue on top. */
-
-.filmstrip-wrap { position: relative; margin-top: var(--sp-8); margin-inline: calc(-1 * var(--page-margin)); }
-
-.filmstrip {
-  column-count: unset;
-  display: flex;
-  align-items: flex-end;
-  gap: var(--sp-5);
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x proximity;
-  /* Generous top padding is reserved headroom, not decoration — a hovered
-     figure scales up from its bottom edge into this space. overflow-x:auto
-     forces overflow-y to clip too (the CSS spec pairs them), so growth has
-     to fit inside the box rather than escape it. */
-  padding: 16vh var(--page-margin) var(--sp-5);
-  margin-top: 0;
-  scrollbar-width: none;
-}
-.filmstrip::-webkit-scrollbar { display: none; }
-.filmstrip figure {
-  flex: none;
-  height: 50vh;
-  max-height: 500px;
-  margin: 0;
-  scroll-snap-align: start;
-}
-.filmstrip img { width: auto; height: 100%; max-width: none; display: block; }
-
-.filmstrip figure[tabindex] {
-  transform-origin: bottom center;
-  transition: transform 420ms var(--ease-standard);
-}
-.filmstrip figure[tabindex]:hover,
-.filmstrip figure[tabindex]:focus-visible {
-  transform: scale(1.26);
-  z-index: 3;
-}
-.filmstrip figure[tabindex]:active { transform: scale(1.2); transition-duration: 140ms; }
-
-.filmstrip-progress { height: 2px; margin: 0 var(--page-margin); background: var(--ink-line-on-bone); }
-.filmstrip-progress__bar { height: 100%; width: 0%; background: var(--ink-900); transition: width 80ms linear; }
-
-.filmstrip-cursor {
-  position: absolute;
-  top: 0; left: 0;
-  width: 84px; height: 84px;
-  border-radius: 50%;
-  background: var(--ink-900);
-  color: var(--bone-50);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--font-mono); font-size: .6875rem; text-transform: uppercase; letter-spacing: .1em;
-  pointer-events: none;
-  opacity: 0;
-  transform: translate(-50%, -50%) scale(.7);
-  transition: opacity 200ms var(--ease-standard), transform 200ms var(--ease-standard);
-  z-index: 5;
-}
-.filmstrip-cursor.is-active { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-
-@media (max-width: 700px) {
-  .filmstrip { padding-top: var(--sp-6); }
-  .filmstrip figure { height: 46vh; }
-  .filmstrip figure[tabindex]:hover, .filmstrip figure[tabindex]:focus-visible, .filmstrip figure[tabindex]:active { transform: none; }
-  .filmstrip-cursor { display: none; }
-}
-
-/* ---------- lightbox ---------- */
-
-.lightbox {
-  position: fixed; inset: 0; z-index: 200;
-  display: none;
-}
-.lightbox__backdrop {
-  position: absolute; inset: 0;
-  background: var(--ink-900);
-  opacity: 0;
-}
-.lightbox__stage {
-  position: absolute; inset: 0;
-  display: flex; align-items: center; justify-content: center;
-  touch-action: none;
-  overscroll-behavior: contain;
-}
-.lightbox__frame {
-  position: relative;
-  display: flex; align-items: center; justify-content: center;
-  will-change: transform;
-}
-.lightbox__img {
-  max-width: min(92vw, 1400px);
-  max-height: 82dvh;
-  width: auto; height: auto;
-  object-fit: contain;
-  -webkit-user-select: none; user-select: none;
-  -webkit-user-drag: none;
-  box-shadow: 0 30px 80px -20px rgba(0,0,0,.6);
-}
-.lightbox__caption {
-  position: absolute; left: 0; right: 0; bottom: var(--sp-7);
-  display: flex; justify-content: center; gap: var(--sp-4);
-  color: var(--bone-50);
-  text-align: center;
-  pointer-events: none;
-}
-.lightbox__top {
-  position: absolute; top: 0; left: 0; right: 0; z-index: 2;
-  display: flex; justify-content: space-between; align-items: center;
-  padding: var(--sp-5) var(--page-margin);
-  color: var(--bone-50);
-}
-.lightbox__close, .lightbox__nav-btn {
-  width: 44px; height: 44px;
-  display: flex; align-items: center; justify-content: center;
-  border: 1px solid rgba(250,248,244,.3);
-  background: rgba(14,14,12,.3);
-  backdrop-filter: blur(12px) saturate(140%);
-  color: var(--bone-50);
-  transition: transform 100ms ease-out, background 150ms ease-out;
-}
-.lightbox__close:hover, .lightbox__nav-btn:hover { background: rgba(14,14,12,.55); }
-.lightbox__close:active, .lightbox__nav-btn:active { transform: scale(.92); }
-.lightbox__nav {
-  position: absolute; top: 50%; transform: translateY(-50%);
-  z-index: 2;
-}
-.lightbox__nav.is-prev { left: var(--page-margin); }
-.lightbox__nav.is-next { right: var(--page-margin); }
-.lightbox__nav-btn:disabled { opacity: 0; pointer-events: none; }
-@media (max-width: 700px) {
-  .lightbox__nav { display: none; }
-}
 
 /* ---------- services / steps — numbered editorial rows, not cards ---------- */
 
@@ -603,45 +395,6 @@
 .dash-list { display: flex; flex-direction: column; gap: var(--sp-4); margin-top: var(--sp-6); max-width: 56ch; }
 .dash-list li { display: flex; gap: var(--sp-4); font-size: 1.0625rem; line-height: 1.5; }
 .dash-list li::before { content: "—"; flex: none; color: var(--clay-500); font-family: var(--font-mono); }
-
-/* ---------- pull quote (placeholder-aware) ---------- */
-
-.pull-quote {
-  margin-top: var(--sp-8);
-  padding: var(--sp-7) var(--sp-8);
-  border-left: 2px solid var(--clay-500);
-}
-.pull-quote p { font-size: clamp(1.3rem, 1.4vw + 1rem, 1.8rem); line-height: 1.4; letter-spacing: -.01em; max-width: 42ch; }
-.pull-quote.is-placeholder {
-  border-left-style: dashed;
-  border-left-color: var(--sand-300);
-  color: var(--ink-meta-on-bone);
-}
-.pull-quote.is-placeholder p { font-size: 1.0625rem; font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .1em; color: var(--ink-meta-on-bone); }
-
-/* ---------- clients — editorial text list, no logo wall ---------- */
-
-.clients__list { display: flex; flex-wrap: wrap; gap: var(--sp-8) var(--sp-9); margin-top: var(--sp-8); }
-.clients__name {
-  font-family: var(--font-grotesk); font-weight: 600;
-  font-variation-settings: 'wdth' 112; letter-spacing: -.02em; text-transform: uppercase;
-  font-size: clamp(1.5rem, 2vw + 1rem, 2.4rem);
-}
-
-/* ---------- service page hero ---------- */
-
-.service-hero { padding: var(--sp-7) var(--page-margin) var(--sp-9); }
-.service-hero__back {
-  display: inline-flex; align-items: center; gap: var(--sp-2);
-  font-family: var(--font-mono); font-size: .75rem; letter-spacing: var(--tracking-meta); text-transform: uppercase;
-  color: var(--ink-meta-on-ink); margin-bottom: var(--sp-8);
-  transition: color var(--motion-hover) var(--ease-standard), transform 100ms ease-out;
-}
-.service-hero__back:hover { color: var(--bone-50); }
-.service-hero__back:active { transform: scale(.96); transition-duration: 80ms; }
-.service-hero h1 { margin: var(--sp-6) 0 var(--sp-3); max-width: 18ch; }
-.service-hero__audience { margin-bottom: var(--sp-5); color: var(--clay-500); }
-.service-hero .lead { color: var(--ink-body-on-ink); }
 
 /* ---------- FAQ accordion ---------- */
 
@@ -718,14 +471,20 @@
 }
 .services-pin__dot.is-active { background: var(--bone-50); transform: scale(1.5); }
 
-.services-pin__panel {
-  position: absolute; inset: 0;
-  display: block;
-  opacity: 0;
-  transition: opacity 600ms var(--ease-standard);
-  pointer-events: none;
+.services-pin__track {
+  display: flex;
+  width: 300%;
+  height: 100%;
+  will-change: transform;
 }
-.services-pin__panel.is-active { opacity: 1; pointer-events: auto; }
+
+.services-pin__panel {
+  position: relative;
+  flex: none;
+  width: calc(100% / 3);
+  height: 100%;
+  display: block;
+}
 
 .services-pin__img {
   position: absolute; inset: 0;
@@ -761,25 +520,17 @@
 .services-pin__num { font-family: var(--font-mono); font-size: 1rem; letter-spacing: .1em; color: var(--sand-300); }
 .services-pin__title { max-width: 14ch; }
 .services-pin__desc { font-size: 1.125rem; line-height: 1.5; max-width: 46ch; color: var(--ink-body-on-ink); }
-.services-pin__link {
-  display: inline-flex; align-self: flex-start;
-  font-family: var(--font-mono); font-size: .75rem; letter-spacing: var(--tracking-meta); text-transform: uppercase;
-  padding-block: var(--sp-2); margin-top: var(--sp-2);
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--motion-hover) var(--ease-standard);
-}
-.services-pin__panel:hover .services-pin__link,
-.services-pin__panel:focus-visible .services-pin__link { border-color: currentColor; }
-.services-pin__panel:active .services-pin__body { opacity: .85; }
 
 @media (max-width: 860px) {
-  /* Pinned scroll-hijacking gets janky against mobile browser chrome and touch
-     physics — degrade to a plain stacked sequence, still full-bleed and big. */
+  /* Pinned scroll-hijacking (and the horizontal track slide) get janky
+     against mobile browser chrome and touch physics — degrade to a plain
+     stacked sequence, still full-bleed and big. */
   .services-pin__scroller { height: auto; }
   .services-pin__sticky { position: static; height: auto; display: flex; flex-direction: column; }
   .services-pin__bar, .services-pin__rail { display: none; }
+  .services-pin__track { display: block; width: auto; height: auto; transform: none !important; }
   .services-pin__panel {
-    position: relative; opacity: 1; pointer-events: auto;
+    width: auto; opacity: 1; pointer-events: auto;
     height: 86vh; min-height: 520px;
     border-top: 1px solid var(--ink-line-on-ink);
   }
@@ -802,21 +553,6 @@
 @media (max-width: 860px) {
   .media-row { grid-template-columns: 1fr; }
 }
-
-/* ---------- testimonials — honest empty state ---------- */
-
-.testimonial-empty {
-  margin-top: var(--sp-8);
-  padding: var(--sp-8);
-  border: 1px dashed var(--sand-300);
-  display: flex; flex-direction: column; gap: var(--sp-3);
-  align-items: flex-start;
-}
-.testimonial-empty p { max-width: 48ch; color: var(--ink-meta-on-bone); }
-
-/* ---------- related services — cross-links to the other two pages ---------- */
-
-.related-services { display: flex; gap: var(--sp-5); flex-wrap: wrap; margin-top: var(--sp-7); }
 
 /* ---------- select fields ---------- */
 
@@ -841,12 +577,6 @@
 @media (max-width: 700px) {
   .numbered-list__item { gap: var(--sp-5); }
   .numbered-list__num { width: 40px; font-size: 1.1rem; }
-  .clients__list { gap: var(--sp-5) var(--sp-7); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .mosaic figure[tabindex] img { transition: opacity 200ms ease; }
-  .mosaic figure[tabindex]:hover img, .mosaic figure[tabindex]:active img { transform: none; }
 }
 
 /* ---------- intro — fullscreen logo reveal, homepage entry, once per session ---------- */
@@ -891,7 +621,3 @@ html.show-intro .intro.is-done { display: none; }
   font-size: clamp(1.25rem, 2.2vw, 1.9rem);
 }
 
-/* ---------- contact teaser (homepage) — mirrors the Services teaser-to-page pattern ---------- */
-.contact-teaser { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--sp-7); flex-wrap: wrap; }
-.contact-teaser__copy { max-width: 52ch; }
-.contact-teaser__actions { display: flex; flex-direction: column; align-items: flex-start; gap: var(--sp-4); }

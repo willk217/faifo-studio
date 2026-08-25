@@ -157,6 +157,7 @@
   const servicesPin = document.querySelector('.services-pin');
   if (servicesPin && window.matchMedia('(min-width: 861px)').matches) {
     const scroller = servicesPin.querySelector('.services-pin__scroller');
+    const track = servicesPin.querySelector('.services-pin__track');
     const panels = Array.from(servicesPin.querySelectorAll('.services-pin__panel'));
     const dots = Array.from(servicesPin.querySelectorAll('.services-pin__dot'));
     const counter = servicesPin.querySelector('[data-current]');
@@ -182,7 +183,11 @@
       ticking = false;
       const vh = window.innerHeight;
       const progress = Math.min(1, Math.max(0, (window.scrollY - scrollerTop) / (scrollerHeight - vh)));
-      const index = Math.min(panels.length - 1, Math.floor(progress * panels.length));
+      // Track slides continuously with scroll (the "scroll left" motion);
+      // is-active is still a discrete nearest-panel pick, driving which
+      // panel's title/description is visible and which image gets the zoom.
+      track.style.transform = `translateX(-${progress * (panels.length - 1) * 100}vw)`;
+      const index = Math.min(panels.length - 1, Math.round(progress * (panels.length - 1)));
       panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
       dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
       if (counter) counter.textContent = String(index + 1).padStart(2, '0');
