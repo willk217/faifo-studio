@@ -12,6 +12,12 @@
   text-transform: uppercase;
   font-size: clamp(2.75rem, 3.4vw + 2rem, 7.4rem);
   text-wrap: balance;
+  /* A single long word (e.g. "Cinematography" in a narrow mobile caption)
+     has nowhere to wrap and silently overflows past whatever ancestor is
+     clipping it — ch-based max-widths only approximate real glyph width
+     for this font. Let it break mid-word as a last resort instead of
+     disappearing past the edge. */
+  overflow-wrap: break-word;
 }
 
 .h-section {
