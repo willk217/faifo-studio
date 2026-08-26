@@ -523,7 +523,11 @@
 .services-pin__body.is-active { opacity: 1; transform: translateY(0); }
 
 .services-pin__num { font-family: var(--font-mono); font-size: 1rem; letter-spacing: .1em; color: var(--sand-300); }
-.services-pin__title { max-width: 14ch; }
+/* 16ch, not 14ch — "Cinematography" measures ~11% wider than 14ch in this
+   font (ch is based on the "0" glyph, which isn't representative of this
+   condensed uppercase display face); the other two titles are already
+   narrower than either value, so this only changes Cinematography's box. */
+.services-pin__title { max-width: 16ch; }
 .services-pin__desc { font-size: 1.125rem; line-height: 1.5; max-width: 46ch; color: var(--ink-body-on-ink); }
 
 @media (max-width: 860px) {
