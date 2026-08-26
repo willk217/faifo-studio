@@ -471,6 +471,7 @@
 
 .services-pin__img {
   position: absolute; inset: 0;
+  z-index: 1;
   width: 100%; height: 100%;
   object-fit: cover;
   transform: scale(1.05);
@@ -480,12 +481,17 @@
 
 .services-pin__scrim {
   position: absolute; inset: 0;
-  /* Stops tuned to the caption's own footprint (num+title+desc sit within
-     ~0-30% of viewport height, measured off .services-pin__body), not
-     picked by eye against one calm frame — busier/brighter footage (the
-     cinematography panel's video) needs the same guaranteed contrast the
-     static photos get. */
-  background: linear-gradient(to top, rgba(14,14,12,.90) 0%, rgba(14,14,12,.6) 30%, rgba(14,14,12,.22) 55%, rgba(14,14,12,0) 78%);
+  z-index: 2; /* explicit, not left to paint order — a hardware-decoded
+                 <video> can get promoted to its own compositor layer and
+                 paint above a later sibling that has no stacking context
+                 of its own, which is exactly what was leaving the
+                 cinematography panel's scrim invisible under the video. */
+  /* Runs the full height with no fully-transparent stop — the previous
+     version hit 0 alpha at 78%, leaving a hard, visible edge where the
+     top of the panel had no wash at all against busy/bright footage.
+     Lower stops still tuned to the caption's own footprint (num+title+desc
+     sit within ~0-30% of viewport height, measured off .services-pin__body). */
+  background: linear-gradient(to top, rgba(14,14,12,.92) 0%, rgba(14,14,12,.62) 28%, rgba(14,14,12,.32) 55%, rgba(14,14,12,.14) 100%);
 }
 
 /* Captions are pinned to the sticky viewport, not the sliding track — a
