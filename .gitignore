@@ -1,7 +1,9 @@
-# Real Auko video exports — 382MB total, GitHub hard-rejects files over 100MB anyway.
-# Not currently referenced by the live page (hero reverted to a static image until
-# there's a compressed proxy). Keep the files locally; don't push them.
-assets/video/
+# Real Auko video exports (4K masters, hundreds of MB) — GitHub hard-rejects
+# files over 100MB anyway. Keep the originals locally; don't push them.
+# auko-walkthrough-web.mp4 is the compressed 1080p proxy actually used on the
+# live page (~20MB) — that one ships.
+assets/video/*
+!assets/video/auko-walkthrough-web.mp4
 
 # Original personal-photo uploads (full-size, mixed-case names). Web-weight,
 # clean-named copies of what's actually used live in assets/photo/personal/ —
