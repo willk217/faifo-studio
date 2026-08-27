@@ -124,6 +124,38 @@
     });
   }
 
+  // Impact stats — count up from 0 once each number scrolls into view.
+  // The "∞" item has no data-count-to, so it just rides the plain .reveal
+  // fade-up above rather than trying to animate toward an infinite target.
+  const countEls = document.querySelectorAll('[data-count-to]');
+  const reduceMotionCount = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (countEls.length) {
+    const animateCount = (el) => {
+      const target = parseInt(el.dataset.countTo, 10);
+      const suffix = el.dataset.suffix || '';
+      if (reduceMotionCount) { el.textContent = target + suffix; return; }
+      const duration = 1400;
+      const start = performance.now();
+      const tick = (now) => {
+        const p = Math.min(1, (now - start) / duration);
+        const eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+        el.textContent = Math.round(target * eased) + suffix;
+        if (p < 1) requestAnimationFrame(tick);
+      };
+      requestAnimationFrame(tick);
+    };
+    if ('IntersectionObserver' in window) {
+      const countIo = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) { animateCount(entry.target); countIo.unobserve(entry.target); }
+        });
+      }, { threshold: 0.6 });
+      countEls.forEach(el => countIo.observe(el));
+    } else {
+      countEls.forEach(el => { el.textContent = el.dataset.countTo + (el.dataset.suffix || ''); });
+    }
+  }
+
   // Reveal on scroll — one authored moment, staggered by DOM order within a section
   const revealEls = document.querySelectorAll('.reveal');
   if ('IntersectionObserver' in window && revealEls.length) {
