@@ -100,58 +100,53 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     </div>
   </section>
 
-  <!-- 02 — Services -->
-  <section class="services-pin on-ink" id="services" aria-label="Services">
-    <div class="services-pin__scroller">
-      <div class="services-pin__sticky">
-        <div class="services-pin__bar meta">
-          <span>02 — Services</span>
-          <span class="services-pin__counter"><span data-current>01</span><span data-total>03</span></span>
-        </div>
-        <div class="services-pin__rail">
-          <span class="services-pin__dot is-active"></span>
-          <span class="services-pin__dot"></span>
-          <span class="services-pin__dot"></span>
-        </div>
+  <!-- 02 — Services — vertical list, one title bold/active at a time; hover,
+       click/tap, or keyboard focus swaps the companion photo (or, for
+       Cinematography, the Auko walkthrough video) and description on the
+       right. Mobile has no hover, so every item stacks with its own media
+       inline instead of depending on a state that touch can't trigger. -->
+  <section class="section services2 on-ink hairline-top" id="services" aria-label="Services">
+    <div class="wrap">
+      <div class="meta-bar">
+        <span>02 — Services</span>
+      </div>
 
-        <div class="services-pin__track">
-          <div class="services-pin__panel is-active">
-            <img class="services-pin__img" src="assets/photo/auko/lodge-canopy-01.jpg" alt="Canopy lodge interior, timber-panelled bed with warm lamplight">
-            <div class="services-pin__scrim" aria-hidden="true"></div>
-          </div>
+      <div class="services2__layout">
+        <ul class="services2__list" id="servicesList">
+          <li class="services2__item is-active" tabindex="0" role="button" aria-pressed="true"
+              data-media="img" data-img="assets/photo/auko/lodge-canopy-01.jpg"
+              data-desc="Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be.">
+            <span class="services2__num">01</span>
+            <h3 class="services2__name">Photography</h3>
+            <p class="services2__desc-mobile">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be.</p>
+            <img class="services2__media-mobile" src="assets/photo/auko/lodge-canopy-01.jpg" alt="Canopy lodge interior, timber-panelled bed with warm lamplight" loading="lazy">
+          </li>
+          <li class="services2__item" tabindex="0" role="button" aria-pressed="false"
+              data-media="video"
+              data-desc="Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.">
+            <span class="services2__num">02</span>
+            <h3 class="services2__name">Cinematography</h3>
+            <p class="services2__desc-mobile">Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.</p>
+            <img class="services2__media-mobile" src="assets/photo/auko/overview-02-dusk.jpg" alt="Aerial dusk view of the Auko lodge" loading="lazy">
+          </li>
+          <li class="services2__item" tabindex="0" role="button" aria-pressed="false"
+              data-media="img" data-img="assets/photo/personal/mountain-window.jpg"
+              data-desc="Logos, visual identity, and the guidelines that keep a brand looking like itself.">
+            <span class="services2__num">03</span>
+            <h3 class="services2__name">Brand identity</h3>
+            <p class="services2__desc-mobile">Logos, visual identity, and the guidelines that keep a brand looking like itself.</p>
+            <img class="services2__media-mobile" src="assets/photo/personal/mountain-window.jpg" alt="A mountain framed through a window opening, warm afternoon light" loading="lazy">
+          </li>
+        </ul>
 
-          <div class="services-pin__panel">
-            <video class="services-pin__img" id="servicesFilmBg" poster="assets/photo/auko/overview-02-dusk.jpg" muted loop playsinline preload="none">
+        <div class="services2__preview">
+          <div class="services2__frame">
+            <img id="servicesPreviewImg" class="services2__media" src="assets/photo/auko/lodge-canopy-01.jpg" alt="">
+            <video id="servicesPreviewVideo" class="services2__media is-hidden" muted loop playsinline preload="none" poster="assets/photo/auko/overview-02-dusk.jpg">
               <source src="assets/video/auko-walkthrough-web.mp4" type="video/mp4">
             </video>
-            <div class="services-pin__scrim" aria-hidden="true"></div>
           </div>
-
-          <div class="services-pin__panel">
-            <img class="services-pin__img" src="assets/photo/personal/mountain-window.jpg" alt="A mountain framed through a window opening, warm afternoon light">
-            <div class="services-pin__scrim" aria-hidden="true"></div>
-          </div>
-        </div>
-
-        <!-- Pinned to the viewport, not the sliding track — a panel's title
-             stays put and cross-fades in/out instead of sliding in half-cut
-             off from the frame edge while its image is still arriving. -->
-        <div class="services-pin__captions">
-          <div class="services-pin__body is-active">
-            <span class="services-pin__num">01 / Photography</span>
-            <h3 class="h-display services-pin__title">Photography</h3>
-            <p class="services-pin__desc">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be.</p>
-          </div>
-          <div class="services-pin__body">
-            <span class="services-pin__num">02 / Cinematography</span>
-            <h3 class="h-display services-pin__title">Cinematography</h3>
-            <p class="services-pin__desc">Property films, resort walkthroughs, and brand films, shot to be watched, not skipped.</p>
-          </div>
-          <div class="services-pin__body">
-            <span class="services-pin__num">03 / Brand identity</span>
-            <h3 class="h-display services-pin__title">Brand identity</h3>
-            <p class="services-pin__desc">Logos, visual identity, and the guidelines that keep a brand looking like itself.</p>
-          </div>
+          <p class="services2__caption" id="servicesPreviewCaption">Real estate, resorts, and land, shot to make a space feel like somewhere you'd want to be.</p>
         </div>
       </div>
     </div>

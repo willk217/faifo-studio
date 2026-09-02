@@ -291,6 +291,8 @@
   line-height: 1.35;
   font-size: clamp(1.75rem, 1.6vw + 1.3rem, 3.25rem);
   max-width: 32ch;
+  margin-inline: auto;
+  text-align: center;
   text-wrap: pretty;
 }
 .statement__text .word {
@@ -434,150 +436,57 @@
 .dash-list li::before { content: "—"; flex: none; color: var(--clay-500); font-family: var(--font-mono); }
 
 
-/* ---------- services pin — full-viewport scroll-pinned takeover, real photography ---------- */
-/* Replaces the old alternating-row list. Three panels cross-fade as the section
-   scrolls past; the sticky stage sits under the nav's z-index so the translucent
-   nav keeps floating above it exactly like it already does over the hero. */
+/* ---------- services2 — vertical list, hover/focus swaps the companion photo ---------- */
+/* One title bold and full-bright at a time, the rest faded — the list itself
+   carries the section, not a photo. Desktop pairs it with a sticky preview
+   panel (image, or for Cinematography the Auko walkthrough video) plus a
+   caption below the frame, not overlaid on it, so there's no scrim to manage. */
 
-.services-pin { position: relative; }
-.services-pin__scroller { height: 190vh; }
-.services-pin__sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  overflow: hidden;
-  z-index: 10;
-  background: var(--ink-900);
-}
+.services2__layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--sp-9); align-items: start; }
+.services2__layout > * { min-width: 0; }
 
-.services-pin__bar {
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  z-index: 3;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: calc(var(--sp-9) + var(--sp-4)) var(--page-margin) 0;
-  color: var(--bone-50);
-  pointer-events: none;
+.services2__list { list-style: none; margin: 0; padding: 0; }
+.services2__item {
+  padding: var(--sp-6) 0;
+  border-top: 1px solid var(--ink-line-on-ink);
+  cursor: default;
+  color: rgba(250, 248, 244, .38);
+  transition: color var(--motion-panel) var(--ease-standard);
 }
-.services-pin__counter { font-variant-numeric: tabular-nums; }
-.services-pin__counter [data-total]::before { content: "/ "; }
+.services2__list li:last-child { border-bottom: 1px solid var(--ink-line-on-ink); }
+.services2__item.is-active { color: var(--bone-50); }
+.services2__num { font-family: var(--font-mono); font-size: .85rem; letter-spacing: .1em; }
+.services2__name {
+  margin: var(--sp-2) 0 0;
+  font-family: var(--font-grotesk);
+  font-weight: 700;
+  font-variation-settings: 'wdth' 112;
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  line-height: .92;
+  font-size: clamp(2.2rem, 4.6vw, 4.6rem);
+}
+.services2__desc-mobile, .services2__media-mobile { display: none; }
 
-.services-pin__rail {
-  position: absolute;
-  right: var(--page-margin);
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-4);
-}
-.services-pin__dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: var(--ink-line-on-ink);
-  transition: background 200ms var(--ease-standard), transform 200ms var(--ease-standard);
-}
-.services-pin__dot.is-active { background: var(--bone-50); transform: scale(1.5); }
-
-.services-pin__track {
-  display: flex;
-  width: 300%;
-  height: 100%;
-  will-change: transform;
-}
-
-.services-pin__panel {
-  position: relative;
-  flex: 1 0 0; /* equal thirds via flex distribution, not a rounded % string —
-                  calc(100%/3) can leave a hairline sub-pixel gap between
-                  panels in some browsers; flex-basis 0 divides exactly. */
-  height: 100%;
-  display: block;
-}
-
-.services-pin__img {
+.services2__preview { position: sticky; top: calc(var(--sp-9) + 48px); }
+.services2__frame { position: relative; aspect-ratio: 4/5; overflow: hidden; box-shadow: var(--shadow-offset); background: var(--ink-900); }
+.services2__media {
   position: absolute; inset: 0;
-  z-index: 1;
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transform: scale(1.05);
-  transition: transform 6000ms linear;
+  width: 100%; height: 100%; object-fit: cover;
+  opacity: 1;
+  transition: opacity 260ms var(--ease-standard);
 }
-.services-pin__panel.is-active .services-pin__img { transform: scale(1.14); }
-
-.services-pin__scrim {
-  position: absolute; inset: 0;
-  z-index: 2; /* explicit, not left to paint order — a hardware-decoded
-                 <video> can get promoted to its own compositor layer and
-                 paint above a later sibling that has no stacking context
-                 of its own, which is exactly what was leaving the
-                 cinematography panel's scrim invisible under the video. */
-  /* Runs the full height with no fully-transparent stop — the previous
-     version hit 0 alpha at 78%, leaving a hard, visible edge where the
-     top of the panel had no wash at all against busy/bright footage.
-     Lower stops still tuned to the caption's own footprint (num+title+desc
-     sit within ~0-30% of viewport height, measured off .services-pin__body). */
-  background: linear-gradient(to top, rgba(14,14,12,.92) 0%, rgba(14,14,12,.62) 28%, rgba(14,14,12,.32) 55%, rgba(14,14,12,.14) 100%);
-}
-
-/* Captions are pinned to the sticky viewport, not the sliding track — a
-   panel's title only ever cross-fades in place, it never travels
-   horizontally, so it can't be caught half off-frame mid-slide the way it
-   was when .services-pin__body lived inside each panel. */
-.services-pin__captions { position: absolute; inset: 0; z-index: 2; }
-
-.services-pin__body {
-  position: absolute;
-  left: 0; right: 0; bottom: 0;
-  padding: 0 var(--page-margin) var(--sp-9);
-  max-width: var(--grid-max);
-  margin-inline: auto;
-  color: var(--bone-50);
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-  transform: translateY(10px);
-  opacity: 0;
-  transition: opacity 550ms var(--ease-standard) 80ms, transform 550ms var(--ease-standard) 80ms;
-}
-.services-pin__body.is-active { opacity: 1; transform: translateY(0); }
-
-.services-pin__num { font-family: var(--font-mono); font-size: 1rem; letter-spacing: .1em; color: var(--sand-300); }
-/* 16ch, not 14ch — "Cinematography" measures ~11% wider than 14ch in this
-   font (ch is based on the "0" glyph, which isn't representative of this
-   condensed uppercase display face); the other two titles are already
-   narrower than either value, so this only changes Cinematography's box. */
-.services-pin__title { max-width: 16ch; }
-.services-pin__desc { font-size: 1.125rem; line-height: 1.5; max-width: 46ch; color: var(--ink-body-on-ink); }
+.services2__media.is-hidden { opacity: 0; }
+.services2__caption { margin: var(--sp-4) 0 0; font-size: 1rem; line-height: 1.5; color: var(--ink-meta-on-ink); max-width: 40ch; }
 
 @media (max-width: 860px) {
-  /* Pinned scroll-hijacking (and the horizontal track slide) get janky
-     against mobile browser chrome and touch physics — degrade to a plain
-     stacked sequence, still full-bleed and big. Captions move back inside
-     each panel here (one panel visible at a time, no slide to catch them
-     mid-transition), stacked in normal flow after the panel's own media. */
-  .services-pin__scroller { height: auto; }
-  .services-pin__sticky { position: static; height: auto; display: flex; flex-direction: column; }
-  .services-pin__bar, .services-pin__rail { display: none; }
-  .services-pin__track { display: block; width: auto; height: auto; transform: none !important; }
-  .services-pin__panel {
-    width: auto; opacity: 1; pointer-events: auto;
-    height: 86vh; min-height: 520px;
-    border-top: 1px solid var(--ink-line-on-ink);
-  }
-  .services-pin__img { transform: scale(1); transition: none; }
-  /* JS (main.js) moves each .services-pin__body back into its matching
-     .services-pin__panel at this breakpoint, restoring the pre-decoupling
-     per-panel layout — mobile never had the desktop mid-slide cut-off bug
-     (no sliding track here), so it just needs its caption anchored inside
-     the panel it belongs to, absolutely positioned same as the base rule. */
-  .services-pin__body { opacity: 1; transform: none; padding-bottom: var(--sp-8); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .services-pin__img, .services-pin__panel.is-active .services-pin__img { transition: none; transform: scale(1); }
+  /* No hover on touch, so there's nothing to trigger the swap — every item
+     shows its own photo and description inline instead, always expanded. */
+  .services2__layout { display: block; }
+  .services2__preview { display: none; }
+  .services2__item { color: var(--bone-50); }
+  .services2__desc-mobile { display: block; margin: var(--sp-4) 0 0; font-size: 1.0625rem; line-height: 1.5; color: var(--ink-body-on-ink); max-width: 46ch; }
+  .services2__media-mobile { display: block; width: 100%; aspect-ratio: 4/3; object-fit: cover; margin-top: var(--sp-5); }
 }
 
 /* ---------- select fields ---------- */

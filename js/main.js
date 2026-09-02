@@ -255,103 +255,47 @@
     window.addEventListener('resize', () => { measureStatement(); updateStatement(); }, { passive: true });
   }
 
-  // Services pin — scroll position through the 190vh scroller drives which of
-  // the three full-viewport panels is active. Only wired above the mobile
-  // breakpoint; below it CSS forces every panel to a plain stacked, always-
-  // visible sequence, so nothing here needs to run (or matter) on touch.
-  const servicesPin = document.querySelector('.services-pin');
-  if (servicesPin && !window.matchMedia('(min-width: 861px)').matches) {
-    // Mobile stacks panels in plain document flow (no sliding track, so
-    // captions were never at risk of the desktop mid-slide cut-off bug) —
-    // move each caption back inside its matching panel so it's positioned
-    // and sized the same way the pre-decoupling layout always worked here.
-    const panels = Array.from(servicesPin.querySelectorAll('.services-pin__panel'));
-    const bodies = Array.from(servicesPin.querySelectorAll('.services-pin__body'));
-    panels.forEach((p, i) => { if (bodies[i]) p.appendChild(bodies[i]); });
-  }
+  // Services — hover, click/tap, or keyboard focus a row and its companion
+  // photo (or, for Cinematography, the Auko walkthrough video) swaps in
+  // below the list. Desktop only — below the breakpoint CSS expands every
+  // item with its own photo inline instead, so there's nothing to wire up
+  // (hover has nothing to trigger it on touch, same reasoning as the hero
+  // trail and the old services scrim's mobile gate).
+  const servicesList = document.getElementById('servicesList');
+  if (servicesList && window.matchMedia('(min-width: 861px)').matches) {
+    const items = Array.from(servicesList.querySelectorAll('.services2__item'));
+    const previewImg = document.getElementById('servicesPreviewImg');
+    const previewVideo = document.getElementById('servicesPreviewVideo');
+    const caption = document.getElementById('servicesPreviewCaption');
+    const reduceMotionSvc = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  if (servicesPin && window.matchMedia('(min-width: 861px)').matches) {
-    const scroller = servicesPin.querySelector('.services-pin__scroller');
-    const track = servicesPin.querySelector('.services-pin__track');
-    const panels = Array.from(servicesPin.querySelectorAll('.services-pin__panel'));
-    const captions = Array.from(servicesPin.querySelectorAll('.services-pin__body'));
-    const dots = Array.from(servicesPin.querySelectorAll('.services-pin__dot'));
-    const counter = servicesPin.querySelector('[data-current]');
+    function activateService(item) {
+      items.forEach(i => { i.classList.remove('is-active'); i.setAttribute('aria-pressed', 'false'); });
+      item.classList.add('is-active');
+      item.setAttribute('aria-pressed', 'true');
+      caption.textContent = item.dataset.desc;
 
-    // Cinematography panel's video background — lazy: nothing downloads
-    // (preload="none") until this panel is actually reached, and only once,
-    // matching the hero storytelling reel's own desktop + motion-OK gate.
-    // Reduced-motion visitors just see the poster frame, same as mobile.
-    const filmBg = document.getElementById('servicesFilmBg');
-    const canPlayBg = filmBg && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let bgStarted = false;
-
-    // Cached on load/resize, not read on every scroll tick — same reasoning
-    // as the hero trail's cached rect above.
-    let scrollerTop = 0, scrollerHeight = 0, ticking = false;
-    function measure() {
-      const rect = scroller.getBoundingClientRect();
-      scrollerTop = rect.top + window.scrollY;
-      scrollerHeight = rect.height;
-    }
-
-    // The track's position is damped, not snapped straight to scroll —
-    // targetX updates instantly on every scroll tick, currentX eases toward
-    // it every frame. A raw 1:1 scroll->transform coupling reads as jerky
-    // against real (often discrete, wheel-notch) scroll input; this is the
-    // same "follow, don't teleport" principle the gallery lightbox's spring
-    // physics used before that page was retired — critically damped, no
-    // overshoot, so it stays within the site's "no bounce for chrome" rule
-    // while still feeling like it has real inertia.
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let targetX = 0, currentX = 0, rafRunning = false;
-
-    function applyDiscreteState(progress) {
-      const index = Math.min(panels.length - 1, Math.round(progress * (panels.length - 1)));
-      panels.forEach((p, i) => p.classList.toggle('is-active', i === index));
-      captions.forEach((c, i) => c.classList.toggle('is-active', i === index));
-      dots.forEach((d, i) => d.classList.toggle('is-active', i === index));
-      if (counter) counter.textContent = String(index + 1).padStart(2, '0');
-      if (canPlayBg && index === 1 && !bgStarted) {
-        bgStarted = true;
-        filmBg.play().catch(() => {}); // autoplay can still be blocked; poster stays visible either way
+      if (item.dataset.media === 'video') {
+        previewImg.classList.add('is-hidden');
+        previewVideo.classList.remove('is-hidden');
+        if (!reduceMotionSvc) previewVideo.play().catch(() => {}); // autoplay can still be blocked; poster stays visible either way
+      } else {
+        previewVideo.classList.add('is-hidden');
+        previewVideo.pause();
+        previewVideo.currentTime = 0;
+        previewImg.classList.remove('is-hidden');
+        previewImg.src = item.dataset.img;
       }
     }
 
-    function damp() {
-      const delta = targetX - currentX;
-      if (Math.abs(delta) < 0.05) {
-        currentX = targetX;
-        track.style.transform = `translateX(-${currentX}vw)`;
-        rafRunning = false;
-        return;
-      }
-      currentX += delta * 0.14;
-      track.style.transform = `translateX(-${currentX}vw)`;
-      requestAnimationFrame(damp);
-    }
-
-    function update() {
-      ticking = false;
-      const vh = window.innerHeight;
-      const progress = Math.min(1, Math.max(0, (window.scrollY - scrollerTop) / (scrollerHeight - vh)));
-      targetX = progress * (panels.length - 1) * 100;
-      applyDiscreteState(progress);
-      if (reduceMotion) {
-        currentX = targetX;
-        track.style.transform = `translateX(-${currentX}vw)`;
-      } else if (!rafRunning) {
-        rafRunning = true;
-        requestAnimationFrame(damp);
-      }
-    }
-
-    measure();
-    update();
-    window.addEventListener('scroll', () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(update); }
-    }, { passive: true });
-    window.addEventListener('resize', () => { measure(); update(); }, { passive: true });
+    items.forEach(item => {
+      item.addEventListener('mouseenter', () => activateService(item));
+      item.addEventListener('click', () => activateService(item));
+      item.addEventListener('focus', () => activateService(item));
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); activateService(item); }
+      });
+    });
   }
 
 })();
