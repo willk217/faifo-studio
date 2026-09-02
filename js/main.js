@@ -256,7 +256,7 @@
   }
 
   // Services — hover, click/tap, or keyboard focus a row and its companion
-  // photo (or, for Cinematography, the Auko walkthrough video) swaps in
+  // photo (or, for Film, the Auko walkthrough video) swaps in
   // below the list. Desktop only — below the breakpoint CSS expands every
   // item with its own photo inline instead, so there's nothing to wire up
   // (hover has nothing to trigger it on touch, same reasoning as the hero

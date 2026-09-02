@@ -210,6 +210,16 @@ Direct report: "the mobile view needs looking at... some of the text currently g
 
 Ran `impeccable`'s mechanical `detect.mjs` after the fix, per the skill's process — this machine still has no Node package install for the HTML/CSS parser modules it wants, so it ran in its documented degraded/regex fallback mode and returned zero findings with an explicit "undercount, not a clean bill" caveat, same constraint already on record for this project's Node-dependent tooling elsewhere in this file. Verification otherwise went through direct DOM sweeps (text `scrollWidth` vs `clientWidth`, touch-target `getBoundingClientRect().height`) at both breakpoints, cache-busting `style.css` directly each time — this session hit the same shared-HTTP-cache issue on record above, confirmed again via a stale-then-fresh comparison rather than assumed.
 
+### Follow-up — Cinematography renamed to Film, header buttons centered, How we work removed
+
+Three direct requests:
+
+**"Cinematography" renamed to "Film" everywhere** — hero meta line, the Services list item and its `data-desc`, the meta description, the Contact form's Project Type option, and every code comment that referenced the old name (kept accurate rather than left stale). The `.services2__name` `overflow-wrap: break-word` fix from the round above is kept as defensive CSS even though "Film" itself is short — the comment explaining it was updated to say so, rather than reference a word that no longer appears anywhere on the page.
+
+**Header buttons centered.** `<header class="nav">` holds exactly two floating circles (logo, burger) that were pinned to opposite corners via `justify-content: space-between` on `.nav__row`. Added `.nav .nav__row { justify-content: center; gap: var(--sp-6); }`, scoped to the actual header rather than the base `.nav__row` class — `.nav-panel`'s own internal row reuses that same class for a different layout (wordmark left, close button right) and needs to keep `space-between`, the same two-contexts-one-class trap this project's nav already hit once before with `.nav__brand`. Confirmed both: the header's pair sits centered on the row (desktop and mobile both checked), the panel's internal row is untouched.
+
+**"How we work" section removed outright**, not hidden — `#process` and its four-step `.numbered-list`, plus every link pointing at it (mobile nav panel, footer nav), and the now fully-orphaned `.numbered-list*` CSS (~20 lines, base rule + the one mobile override). Our Impact renumbers 04→03, Contact renumbers 05→04.
+
 ## Stack
 
 - Plain HTML, CSS, JS. No framework, no bundler — this machine has no Node/npm installed, and a photography portfolio doesn't need one.

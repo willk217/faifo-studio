@@ -12,11 +12,10 @@
   text-transform: uppercase;
   font-size: clamp(2.75rem, 3.4vw + 2rem, 7.4rem);
   text-wrap: balance;
-  /* A single long word (e.g. "Cinematography" in a narrow mobile caption)
-     has nowhere to wrap and silently overflows past whatever ancestor is
-     clipping it — ch-based max-widths only approximate real glyph width
-     for this font. Let it break mid-word as a last resort instead of
-     disappearing past the edge. */
+  /* A single long word in a narrow mobile caption has nowhere to wrap and
+     silently overflows past whatever ancestor is clipping it — ch-based
+     max-widths only approximate real glyph width for this font. Let it
+     break mid-word as a last resort instead of disappearing past the edge. */
   overflow-wrap: break-word;
 }
 
@@ -131,6 +130,10 @@
   justify-content: space-between;
   padding: var(--sp-5) var(--page-margin);
 }
+/* Scoped to the main header specifically, not .nav-panel's own internal row
+   (same class, different context — wordmark-left/close-right there needs to
+   stay space-between, same reasoning as the earlier .nav__brand scoping bug). */
+.nav .nav__row { justify-content: center; gap: var(--sp-6); }
 
 /* Scoped to .nav specifically — .nav-panel reuses the .nav__brand class for
    its own, differently-shaped logo+wordmark header and must not inherit
@@ -414,26 +417,6 @@
 .nav-panel__links a { font-family: var(--font-grotesk); font-weight: 600; font-variation-settings: 'wdth' 112; text-transform: uppercase; font-size: 2rem; letter-spacing: -.03em; }
 .nav-panel__close { align-self: flex-end; width: 40px; height: 40px; border: 1px solid var(--ink-line-on-ink); display: flex; align-items: center; justify-content: center; }
 
-/* ---------- services / steps — numbered editorial rows, not cards ---------- */
-
-.numbered-list { display: flex; flex-direction: column; margin-top: var(--sp-8); }
-.numbered-list__item {
-  display: flex; gap: var(--sp-7);
-  padding: var(--sp-6) 0;
-  border-top: 1px solid var(--ink-line-on-bone);
-}
-.on-ink .numbered-list__item { border-top-color: var(--ink-line-on-ink); }
-.numbered-list__item:last-child { border-bottom: 1px solid var(--ink-line-on-bone); }
-.on-ink .numbered-list__item:last-child { border-bottom-color: var(--ink-line-on-ink); }
-.numbered-list__num {
-  font-family: var(--font-mono); font-size: 1.5rem; letter-spacing: -.01em;
-  color: var(--clay-500); flex: none; width: 64px;
-}
-.numbered-list__body { flex: 1; display: flex; flex-direction: column; gap: var(--sp-2); max-width: 62ch; }
-.numbered-list__title { font-size: 1.5rem; font-weight: 500; letter-spacing: -.01em; }
-.numbered-list__desc { font-size: 1.0625rem; line-height: 1.55; }
-.on-bone .numbered-list__desc { color: var(--ink-meta-on-bone); }
-.on-ink .numbered-list__desc { color: var(--ink-body-on-ink); }
 
 /* ---------- what-we-did checklist ---------- */
 
@@ -445,7 +428,7 @@
 /* ---------- services2 — vertical list, hover/focus swaps the companion photo ---------- */
 /* One title bold and full-bright at a time, the rest faded — the list itself
    carries the section, not a photo. Desktop pairs it with a sticky preview
-   panel (image, or for Cinematography the Auko walkthrough video) plus a
+   panel (image, or for Film the Auko walkthrough video) plus a
    caption below the frame, not overlaid on it, so there's no scrim to manage. */
 
 .services2__layout { display: grid; grid-template-columns: 1.3fr 1fr; gap: var(--sp-9); align-items: start; }
@@ -471,10 +454,10 @@
   text-transform: uppercase;
   line-height: .92;
   font-size: clamp(2.2rem, 4.6vw, 4.6rem);
-  /* "Cinematography" (14 unbroken characters) is wider than the available
-     column at this weight/size on narrow phones — same failure this project
-     has hit twice before on the same word in a different class. Let it wrap
-     mid-word as a last resort instead of running off the edge. */
+  /* Defensive: "Cinematography" (before this section's services were
+     renamed) genuinely overflowed at this weight/size on narrow phones —
+     same failure this project has hit twice before on the same word in a
+     different class. Kept in case a future service name runs just as long. */
   overflow-wrap: break-word;
 }
 .services2__desc-mobile, .services2__media-mobile { display: none; }
@@ -520,10 +503,6 @@
 
 .hero__ctas { display: flex; gap: var(--sp-4); flex-wrap: wrap; margin-top: var(--sp-6); }
 
-@media (max-width: 700px) {
-  .numbered-list__item { gap: var(--sp-5); }
-  .numbered-list__num { width: 40px; font-size: 1.1rem; }
-}
 
 /* ---------- intro — fullscreen logo reveal, homepage entry, once per session ---------- */
 /* Page chrome, not a gesture surface: CSS-only, no bounce, same --ease-standard
